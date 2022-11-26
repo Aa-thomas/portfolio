@@ -1,5 +1,9 @@
 // set up text to print, each item in array is new line
-let aText = new Array('Aaron Thomas', 'Full-Stack', 'Web Developer');
+let aText = new Array(
+	'<span>Aaron Thomas</span>',
+	'Full-Stack',
+	'Web Developer'
+);
 let iSpeed = 100; // time delay of print out
 let iIndex = 0; // start printing array at this posision
 let iArrLength = aText[0].length; // the length of the text array

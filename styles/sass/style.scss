@@ -1,7 +1,18 @@
+// Global
 @use './partials/global/setup';
 @use './partials/global/typography.scss';
 
-
+// Header
 @use './partials/header';
 
+// Skills
+@use './partials/skills';
+
+// Contact
+@use './partials/contact';
+
+// Footer
+@use './partials/footer';
+
+// Media Queries
 @use './partials/media-queries';

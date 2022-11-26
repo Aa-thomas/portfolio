@@ -1,0 +1,7 @@
+@use '../partials/global/variables' as v;
+
+footer {
+   background-color: v.$background;
+   color: v.$primary;
+   text-align: center;
+}

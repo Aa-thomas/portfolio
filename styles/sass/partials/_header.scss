@@ -15,7 +15,7 @@ header {
       a {
          font-weight: 700;
          transition: 0.2s;
-         &:hover{
+         &:hover, &:focus {
             border-bottom: solid 4px v.$secondary;
          }
       }
@@ -25,23 +25,32 @@ header {
       position:absolute;
       top: 50vh;
       font-size: 2.8rem;
-      
-
-      span {
-         border-bottom: solid 4px v.$secondary;
-      }
    }
-}
+   
+   i {
+      display: none !important;
+      font-size: 1rem;
+      color: v.$primary;
+      padding-top: 30px;
+      cursor: pointer;
+   }
 
+   span {
+      border-bottom: solid 4px v.$secondary;
+   }
+
+   /* typewriter cursor */
    span#carat {
-   border: none;
-   animation: 
-     typing 1.5s steps(40, end),
-     blink-caret .75s step-start infinite;
- }
- 
- /* The typewriter cursor effect */
- @keyframes blink-caret {
-   from, to { color: transparent }
-   50% { color: v.$secondary; }
- }
+      border: none;
+      animation: 
+      typing 1.5s steps(40, end),
+      blink-caret .75s step-start infinite;
+   }
+   
+   /* typewriter cursor blink effect */
+   @keyframes blink-caret {
+      from, to { color: transparent }
+      50% { color: v.$secondary; }
+   }
+
+}

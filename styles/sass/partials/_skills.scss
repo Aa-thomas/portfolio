@@ -1,0 +1,29 @@
+@use './global/variables' as v;
+
+.skills {
+   text-align: center;
+
+   ul.icon-list {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 6% auto;
+      justify-content: center;
+
+      li {
+         flex-basis: 30%;
+         margin: 10px;
+         padding: 10px;
+         transition: 0.2s;
+         &:hover{
+            transition: 0.2s;
+            color: v.$secondary;
+            transform: scale(1.2);
+            
+         }
+      }
+
+      i, .i {
+         font-size: 3rem;
+      }
+   }
+}

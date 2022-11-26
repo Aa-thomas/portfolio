@@ -8,12 +8,17 @@
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet"> 
+   <script src="https://kit.fontawesome.com/9e29c23d4f.js" crossorigin="anonymous"></script>
+   <script src="https://code.iconify.design/iconify-icon/1.0.1/iconify-icon.min.js"></script>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-  
+   <!-- Header -->
    <header>
       <div class="wrapper">
+         <!-- Navigation -->
+         <i class="fa-solid fa-bars menu"></i>
          <nav>
             <ul>
                <li><a href="#about">About</a></li>
@@ -21,12 +26,107 @@
                <li><a href="#contact">Contact</a></li>
             </ul>
          </nav>
-         <!-- <h1><span>Aaron Thomas</span><br> Full-Stack <br> Web Developer</h1> -->
          <h1 id="typedtext"></h1>
-      </div>
-      
+      </div> 
    </header>
+
+
    
+   <main>
+      <!-- About -->
+      <section class="about">
+         <div class="wrapper">
+
+         </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="skills">
+         <div class="wrapper">
+            <h2>Skills</h2>
+            <ul class="icon-list">
+               <li>
+                  <i class="fa-brands fa-html5"></i>
+                  <p>HTML</p>
+               </li>
+               <li>
+                  <i class="fa-brands fa-css3-alt"></i>
+                  <p>CSS</p>
+               </li>
+               <li>
+                  <i class="fa-brands fa-square-js"></i>
+                  <p>JavaScript</p>
+               </li>
+               <li>
+                  <i class="fa-brands fa-sass"></i>
+                  <p>Sass</p>
+               </li>
+               <li>
+                  <i class="fa-brands fa-react"></i>
+                  <p>React</p>
+               </li>
+               <li>
+                  <i class="fa-brands fa-node"></i>
+                  <p>Node.js</p>
+               </li>
+               <li>
+                  <i class="fa-solid fa-code"></i>
+                  <p>Rest API's</p>
+               </li>
+               <li>
+                  <iconify-icon class="i" icon="mdi:firebase"></iconify-icon>
+                  <p>Firebase</p>
+               </li>
+               <li>
+                  <i class="fa-solid fa-database"></i>
+                  <p>SQL</p>
+               </li>
+               <li>
+                  <i class="devicon-git-plain"></i>
+                  <p>Git</p>
+               </li>
+               <li>
+                  <i class="fa-solid fa-mobile-screen"></i>
+                  <p>Responsive Web Design</p>
+               </li>
+               <li>
+                  <i class="fa-solid fa-universal-access"></i>
+                  <p>Accessibility</p>
+               </li>
+            </ul>
+         </div>
+      </section>
+
+
+      <!-- Contact -->
+      <div class="wrapper">
+
+         <h2>Get In Touch</h2>
+         <form action="aarthomas01@gmail.com" method="POST">
+            
+            <div class="name-email-flex">
+               <label for="name" class="sr-only">Name</label>
+               <input type="text" name="name" id="name" placeholder="Name" required>
+      
+               <label for="email" class="sr-only">Email</label>
+               <input type="email" name="email" id="email" placeholder="Email" required>
+
+               <label for="phone" class="sr-only">Phone</label>
+               <input type="phone" name="phone" id="phone" placeholder="Phone" required>
+            </div>
+
+            <label for="subject" class="sr-only">Subject</label>
+               <input type="text" name="subject" id="subject" placeholder="Subject" required>
+   
+            <label for="message" class="sr-only">Message</label>
+            <textarea name="message" id="message" cols="30" rows="6" placeholder="Message" required></textarea>
+   
+            <button type="submit" value="Submit">Submit</button>
+         </form>
+      </div>
+
+   </main>
+   <footer> Designed and created by Aaron Thomas 2022</footer>   
 </body>
 <script src="./scripts.js"></script>
 </html>

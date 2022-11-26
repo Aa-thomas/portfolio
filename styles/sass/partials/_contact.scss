@@ -1,0 +1,92 @@
+@use './global/variables' as v;
+
+
+   form {
+      display: flex;
+      flex-direction: column;
+      padding: 50px;
+      background-color: v.$background;
+      gap: 50px;
+
+      .name-email-flex {
+         display: flex;
+         justify-content: space-between;
+      }
+
+      input,
+      textarea {
+         background-color: v.$background;
+         color: #fff;
+         border: none;
+         outline: none;
+         border-bottom: solid 2px v.$primary;
+         font-size: clamp(0.8rem, 1.6vw, 1rem);
+         &::placeholder {
+            color: v.$primary;
+            opacity: 1;
+         }
+         &:hover, &:focus {
+            border-color: v.$secondary;
+         }
+      }
+
+      textarea {
+         border: solid 2px v.$primary;
+         padding: 20px;
+         transition: 0.2s;
+         &:focus,&:hover {
+            transform: scale(1.03);
+            border-width: 3px;
+         }
+      }
+
+      input#name,
+      input#email,
+      input#phone,
+      input#subject {
+         width: 28%;
+         padding: 10px 20px;
+         color: v.$primary;
+         opacity: 10;
+         transition: 0.2s;
+         &:focus,
+         &:hover {
+            transform: scaleX(1.08);
+            border-bottom-width: 3px;
+            outline: none;
+         outline-color: v.$primary;
+         }
+      }
+
+      input#subject {
+         width: 100%;
+      }
+
+      button {
+         border: none;
+         text-transform: uppercase;
+         background-color: v.$primary;
+         color: v.$background;
+         padding: 15px 10px;
+         transition: 0.2s;
+         &:hover, &:focus {
+            transition: 0.2s;
+            transform: scale(1.03);
+            background-color: v.$secondary;
+         }
+      }
+
+   }
+
+
+   @media (max-width: 768px) {
+
+      .name-email-flex {
+         flex-direction: column;
+         
+         input#name, input#email, input#phone {
+            width: 100%;
+         }
+      }
+
+   }

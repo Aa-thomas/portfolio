@@ -1,4 +1,4 @@
-// Header
+
 @media (max-width: 900px) {
    header {
       background-image: url(../images/header-sm.jpg);
@@ -13,6 +13,10 @@
 }
 
 @media (max-width: 768px) {
+   .wrapper {
+      max-width: 95%;
+   }
+
    header {
       nav {
          display: none;

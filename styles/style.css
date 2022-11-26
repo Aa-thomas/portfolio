@@ -512,6 +512,9 @@ footer {
   }
 }
 @media (max-width: 768px) {
+  .wrapper {
+    max-width: 95%;
+  }
   header nav {
     display: none;
   }

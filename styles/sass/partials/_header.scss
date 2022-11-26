@@ -1,0 +1,32 @@
+@use './global/variables' as v;
+
+header {
+   background: url(../header-med.jpg);
+   background-size: cover;
+   height: 100vh;
+
+   nav ul{
+      display: flex;
+      gap: 10%;
+      font-size: 1.2rem;
+      padding-top: 30px;
+
+      a {
+         font-weight: 700;
+         transition: 0.2s;
+         &:hover{
+            border-bottom: solid 4px v.$secondary;
+         }
+      }
+   }
+
+   h1 {
+      position:absolute;
+      top: 50vh;
+      font-size: 2.8rem;
+
+      span {
+         border-bottom: solid 4px v.$secondary;
+      }
+   }
+}

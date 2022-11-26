@@ -512,13 +512,13 @@ footer {
   }
 }
 @media (max-width: 768px) {
-  .wrapper {
-    width: 100%;
-  }
   header nav {
     display: none;
   }
   header i {
     display: block !important;
+  }
+  .contact .wrapper, .skills .wrapper {
+    width: 100%;
   }
 }

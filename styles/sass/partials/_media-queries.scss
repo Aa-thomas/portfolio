@@ -13,9 +13,7 @@
 }
 
 @media (max-width: 768px) {
-   .wrapper {
-      width: 100%;
-   }
+   
 
    header {
       nav {
@@ -25,5 +23,9 @@
       i {
          display: block !important;
       }
+   }
+
+   .contact .wrapper, .skills .wrapper {
+      width: 100%;
    }
 }

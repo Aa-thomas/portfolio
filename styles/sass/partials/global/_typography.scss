@@ -1,6 +1,9 @@
+@use './variables' as v;
+
 html {
    font-size: 125%;
    font-family: 'Sen', sans-serif;
+   color: v.$primary;
 }
 
 ul {

@@ -257,6 +257,7 @@ section {
 html {
   font-size: 125%;
   font-family: "Sen", sans-serif;
+  color: black;
 }
 
 ul {
@@ -298,6 +299,29 @@ header h1 span {
   border-bottom: solid 4px #e9c46a;
 }
 
+span#carat {
+  border: none;
+  -webkit-animation: typing 1.5s steps(40, end), blink-caret 0.75s step-start infinite;
+          animation: typing 1.5s steps(40, end), blink-caret 0.75s step-start infinite;
+}
+
+/* The typewriter cursor effect */
+@-webkit-keyframes blink-caret {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: #e9c46a;
+  }
+}
+@keyframes blink-caret {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: #e9c46a;
+  }
+}
 @media (max-width: 900px) {
   header {
     background-image: url(../images/header-sm.jpg);

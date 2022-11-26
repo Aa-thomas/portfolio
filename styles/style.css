@@ -269,7 +269,7 @@ a {
 }
 
 header {
-  background: url(../header-med.jpg);
+  background: url(../images/header-med.jpg);
   background-size: cover;
   height: 100vh;
 }
@@ -300,15 +300,10 @@ header h1 span {
 
 @media (max-width: 900px) {
   header {
-    background-image: url(../header-sm.jpg);
+    background-image: url(../images/header-sm.jpg);
     background-size: cover;
   }
   header nav a {
     font-size: clamp(1rem, 2.7vw, 2rem);
-  }
-}
-@media (max-width: 500px) {
-  header {
-    background-image: url(../header-sm.jpg);
   }
 }

@@ -1,6 +1,9 @@
 @use './global/variables' as v;
 
 
+.contact {
+   text-align: center;
+   
    form {
       display: flex;
       flex-direction: column;
@@ -90,3 +93,4 @@
       }
 
    }
+}

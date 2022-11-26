@@ -375,7 +375,10 @@ header span#carat {
   font-size: 3rem;
 }
 
-form {
+.contact {
+  text-align: center;
+}
+.contact form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -387,7 +390,7 @@ form {
   background-color: #EAEAEA;
   gap: 50px;
 }
-form .name-email-flex {
+.contact form .name-email-flex {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -395,8 +398,8 @@ form .name-email-flex {
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
-form input,
-form textarea {
+.contact form input,
+.contact form textarea {
   background-color: #EAEAEA;
   color: #fff;
   border: none;
@@ -404,47 +407,47 @@ form textarea {
   border-bottom: solid 2px black;
   font-size: clamp(0.8rem, 1.6vw, 1rem);
 }
-form input::-webkit-input-placeholder, form textarea::-webkit-input-placeholder {
+.contact form input::-webkit-input-placeholder, .contact form textarea::-webkit-input-placeholder {
   color: black;
   opacity: 1;
 }
-form input::-moz-placeholder, form textarea::-moz-placeholder {
+.contact form input::-moz-placeholder, .contact form textarea::-moz-placeholder {
   color: black;
   opacity: 1;
 }
-form input:-ms-input-placeholder, form textarea:-ms-input-placeholder {
+.contact form input:-ms-input-placeholder, .contact form textarea:-ms-input-placeholder {
   color: black;
   opacity: 1;
 }
-form input::-ms-input-placeholder, form textarea::-ms-input-placeholder {
+.contact form input::-ms-input-placeholder, .contact form textarea::-ms-input-placeholder {
   color: black;
   opacity: 1;
 }
-form input::placeholder,
-form textarea::placeholder {
+.contact form input::placeholder,
+.contact form textarea::placeholder {
   color: black;
   opacity: 1;
 }
-form input:hover, form input:focus,
-form textarea:hover,
-form textarea:focus {
+.contact form input:hover, .contact form input:focus,
+.contact form textarea:hover,
+.contact form textarea:focus {
   border-color: #e9c46a;
 }
-form textarea {
+.contact form textarea {
   border: solid 2px black;
   padding: 20px;
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
-form textarea:focus, form textarea:hover {
+.contact form textarea:focus, .contact form textarea:hover {
   -webkit-transform: scale(1.03);
           transform: scale(1.03);
   border-width: 3px;
 }
-form input#name,
-form input#email,
-form input#phone,
-form input#subject {
+.contact form input#name,
+.contact form input#email,
+.contact form input#phone,
+.contact form input#subject {
   width: 28%;
   padding: 10px 20px;
   color: black;
@@ -452,23 +455,23 @@ form input#subject {
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
-form input#name:focus, form input#name:hover,
-form input#email:focus,
-form input#email:hover,
-form input#phone:focus,
-form input#phone:hover,
-form input#subject:focus,
-form input#subject:hover {
+.contact form input#name:focus, .contact form input#name:hover,
+.contact form input#email:focus,
+.contact form input#email:hover,
+.contact form input#phone:focus,
+.contact form input#phone:hover,
+.contact form input#subject:focus,
+.contact form input#subject:hover {
   -webkit-transform: scaleX(1.08);
           transform: scaleX(1.08);
   border-bottom-width: 3px;
   outline: none;
   outline-color: black;
 }
-form input#subject {
+.contact form input#subject {
   width: 100%;
 }
-form button {
+.contact form button {
   border: none;
   text-transform: uppercase;
   background-color: black;
@@ -477,25 +480,25 @@ form button {
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
-form button:hover, form button:focus {
+.contact form button:hover, .contact form button:focus {
   -webkit-transition: 0.2s;
   transition: 0.2s;
   -webkit-transform: scale(1.03);
           transform: scale(1.03);
   background-color: #e9c46a;
 }
-
 @media (max-width: 768px) {
-  .name-email-flex {
+  .contact .name-email-flex {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
   }
-  .name-email-flex input#name, .name-email-flex input#email, .name-email-flex input#phone {
+  .contact .name-email-flex input#name, .contact .name-email-flex input#email, .contact .name-email-flex input#phone {
     width: 100%;
   }
 }
+
 footer {
   background-color: #EAEAEA;
   color: black;

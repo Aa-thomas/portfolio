@@ -8,12 +8,6 @@ html { box-sizing: border-box;}
 
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; white-space: nowrap; clip-path: inset(100%); clip: rect(0 0 0 0); overflow: hidden;}
 
-a:focus, a:hover, input:focus, input:hover {
-   outline: dotted;
-   outline-color: v.$secondary;
-   outline-width: 1px;
-}
-
 .wrapper {
    max-width: 1200px;
    width: 85%;
@@ -38,4 +32,18 @@ img {
 
 section {
    padding: 40px 0;
+}
+
+a {
+   display: block;
+   transition: 0.2s;
+   &:hover, &:focus{
+      transition: 0.2s;
+      border-bottom: solid 4px v.$secondary;
+      transform:scale(1.1);
+   }
+}
+
+button {
+   cursor: pointer;
 }

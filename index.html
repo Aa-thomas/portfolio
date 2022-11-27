@@ -18,14 +18,22 @@
    <header>
       <div class="wrapper">
          <!-- Navigation -->
-         <i class="fa-solid fa-bars menu"></i>
-         <nav>
+         <nav class="desktop">
             <ul>
                <li><a href="#about">About</a></li>
                <li><a href="#projects">Projects</a></li>
                <li><a href="#contact">Contact</a></li>
             </ul>
          </nav>
+         <!-- <nav class="dropdown">
+            <i class="fa-solid fa-xmark xmark"></i>
+            <i class="fa-solid fa-bars menu"></i>
+            <ul class="dropdown-content">
+               <li><a href="#about">About</a></li>
+               <li><a href="#projects">Projects</a></li>
+               <li><a href="#contact">Contact</a></li>
+            </ul>
+          </nav>  -->
          <h1 id="typedtext"></h1>
       </div> 
    </header>
@@ -34,9 +42,35 @@
    
    <main>
       <!-- About -->
-      <section class="about">
+      <section class="about" id="about">
          <div class="wrapper">
-
+            <h2>About Me</h2>
+            <div class="about-flex">
+               <img src="https://placebear.com/300/400" alt="">
+               <div class="text-container">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consectetur rerum necessitatibus eum recusandae, in esse excepturi magni inventore velit ducimus cumque totam numquam. Non minus iste ut quasi corporis? Sit libero dolor qui a dignissimos quos assumenda sunt placeat unde quas. Nostrum facilis, odio sapiente expedita exercitationem, error repellat provident, omnis saepe in autem. Dolor placeat repudiandae doloremque magni minima.</p>
+                  <ul class="icon-list">
+                     <li> 
+                        <a href="https://www.linkedin.com/in/aaron-thomas-716932219/" target="_blank">
+                           <i class="fa-brands fa-linkedin"></i>
+                           <p>LinkedIn</p>
+                        </a>
+                     </li>
+                     <li> 
+                        <a href="https://github.com/aa-thomas">
+                           <i class="fa-brands fa-github"></i>
+                           <p>GitHub</p>
+                        </a>
+                     </li>
+                     <li>
+                        <a href="./images/AaronThomas-Resume.pdf">
+                           <i class="fa-solid fa-file"></i>
+                           <p>Resume</p>
+                        </a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
          </div>
       </section>
 
@@ -99,7 +133,7 @@
 
 
       <!-- Contact -->
-<section class="contact">
+<section class="contact" id="contact">
    <div class="wrapper">
 
       <h2>Get In Touch</h2>
@@ -130,5 +164,6 @@
    </main>
    <footer> Designed and created by Aaron Thomas 2022</footer>   
 </body>
-<script src="./scripts.js"></script>
+<script src="./scripts/script.js"></script>
+<script src="./scripts/typedtext.js"></script>
 </html>

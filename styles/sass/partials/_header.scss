@@ -6,7 +6,7 @@ header {
    height: 100vh;
    
 
-   nav ul{
+   nav.desktop ul{
       display: flex;
       gap: 10%;
       font-size: 1.2rem;
@@ -15,21 +15,39 @@ header {
       a {
          font-weight: 700;
          transition: 0.2s;
-         &:hover, &:focus {
-            border-bottom: solid 4px v.$secondary;
-         }
       }
+   }
+
+   ul.dropdown-content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      i.xmark {
+         display: none;
+      }
+
+      .menu {
+         display: none;
+      }
+
+      a {
+         display: none;
+      }
+
+
    }
 
    h1 {
       position:absolute;
       top: 50vh;
       font-size: 2.8rem;
+      
    }
    
    i {
       display: none !important;
-      font-size: 1rem;
+      font-size: 2rem;
       color: v.$primary;
       padding-top: 30px;
       cursor: pointer;

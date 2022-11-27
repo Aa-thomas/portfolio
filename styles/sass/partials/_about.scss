@@ -1,0 +1,50 @@
+@use './global/variables' as v;
+
+.about {
+   text-align: center;
+
+   .about-flex {
+      display: flex;
+      margin-top: 50px;
+      gap: 30px;
+   }
+
+   img {
+      border-radius: 10px;
+   }
+
+   .text-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      p {
+         text-align: justify;
+      }
+
+      ul.icon-list {
+         display: flex;
+         margin-top: 30px;
+      
+         li {
+            font-size: 1rem;
+            color: v.$primary;
+            flex-basis: 30%;
+            transition: 0.2s;
+            &:hover, &:focus {
+               transition: 0.2s;
+               color: v.$secondary;
+               transform: scale(1.1);
+            }
+
+            a:hover, a:focus {
+               border: none;
+            }
+
+            p {
+               text-align: center;
+            }
+         }
+      }
+   }
+}

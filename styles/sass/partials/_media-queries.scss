@@ -10,22 +10,40 @@
       }
 
    }
+
+   .about {
+      p {
+         font-size: clamp(1rem, 2.2vw, 1.8rem);
+      }
+   }
 }
 
 @media (max-width: 768px) {
    
 
    header {
-      nav {
-         display: none;
+      nav.desktop ul {
+         flex-direction: column;
+         gap: 30px;
       }
 
-      i {
-         display: block !important;
+      nav.dropdown {
+
+         i.menu {
+            display: block !important;
+         }
+      }
+   }
+
+   .about {
+      .about-flex {
+         flex-direction: column;
+         gap: 50px;
       }
    }
 
    .contact .wrapper, .skills .wrapper {
       width: 100%;
+
    }
 }

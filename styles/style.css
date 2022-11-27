@@ -226,12 +226,6 @@ html {
   overflow: hidden;
 }
 
-a:focus, a:hover, input:focus, input:hover {
-  outline: dotted;
-  outline-color: #e9c46a;
-  outline-width: 1px;
-}
-
 .wrapper {
   max-width: 1200px;
   width: 85%;
@@ -258,6 +252,23 @@ img {
 
 section {
   padding: 40px 0;
+}
+
+a {
+  display: block;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+a:hover, a:focus {
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  border-bottom: solid 4px #e9c46a;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+button {
+  cursor: pointer;
 }
 
 html {
@@ -289,7 +300,7 @@ header {
   /* typewriter cursor */
   /* typewriter cursor blink effect */
 }
-header nav ul {
+header nav.desktop ul {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -297,13 +308,29 @@ header nav ul {
   font-size: 1.2rem;
   padding-top: 30px;
 }
-header nav ul a {
+header nav.desktop ul a {
   font-weight: 700;
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
-header nav ul a:hover, header nav ul a:focus {
-  border-bottom: solid 4px #e9c46a;
+header ul.dropdown-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 30px;
+}
+header ul.dropdown-content i.xmark {
+  display: none;
+}
+header ul.dropdown-content .menu {
+  display: none;
+}
+header ul.dropdown-content a {
+  display: none;
 }
 header h1 {
   position: absolute;
@@ -312,7 +339,7 @@ header h1 {
 }
 header i {
   display: none !important;
-  font-size: 1rem;
+  font-size: 2rem;
   color: black;
   padding-top: 30px;
   cursor: pointer;
@@ -342,6 +369,62 @@ header span#carat {
   }
 }
 
+.about {
+  text-align: center;
+}
+.about .about-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 50px;
+  gap: 30px;
+}
+.about img {
+  border-radius: 10px;
+}
+.about .text-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.about .text-container p {
+  text-align: justify;
+}
+.about .text-container ul.icon-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 30px;
+}
+.about .text-container ul.icon-list li {
+  font-size: 1rem;
+  color: black;
+  -ms-flex-preferred-size: 30%;
+      flex-basis: 30%;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+.about .text-container ul.icon-list li:hover, .about .text-container ul.icon-list li:focus {
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  color: #e9c46a;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+.about .text-container ul.icon-list li a:hover, .about .text-container ul.icon-list li a:focus {
+  border: none;
+}
+.about .text-container ul.icon-list li p {
+  text-align: center;
+}
+
 .skills {
   text-align: center;
 }
@@ -368,8 +451,6 @@ header span#carat {
   -webkit-transition: 0.2s;
   transition: 0.2s;
   color: #e9c46a;
-  -webkit-transform: scale(1.2);
-          transform: scale(1.2);
 }
 .skills ul.icon-list i, .skills ul.icon-list .i {
   font-size: 3rem;
@@ -401,7 +482,7 @@ header span#carat {
 .contact form input,
 .contact form textarea {
   background-color: #EAEAEA;
-  color: #fff;
+  color: black;
   border: none;
   outline: none;
   border-bottom: solid 2px black;
@@ -435,6 +516,7 @@ header span#carat {
 }
 .contact form textarea {
   border: solid 2px black;
+  border-radius: 10px;
   padding: 20px;
   -webkit-transition: 0.2s;
   transition: 0.2s;
@@ -473,6 +555,7 @@ header span#carat {
 }
 .contact form button {
   border: none;
+  border-radius: 10px;
   text-transform: uppercase;
   background-color: black;
   color: #EAEAEA;
@@ -513,13 +596,27 @@ footer {
   header nav a {
     font-size: clamp(1rem, 2.7vw, 2rem);
   }
+  .about p {
+    font-size: clamp(1rem, 2.2vw, 1.8rem);
+  }
 }
 @media (max-width: 768px) {
-  header nav {
-    display: none;
+  header nav.desktop ul {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    gap: 30px;
   }
-  header i {
+  header nav.dropdown i.menu {
     display: block !important;
+  }
+  .about .about-flex {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    gap: 50px;
   }
   .contact .wrapper, .skills .wrapper {
     width: 100%;

@@ -725,6 +725,7 @@ footer {
   }
   header nav a {
     font-size: clamp(1rem, 2.7vw, 2rem);
+    display: inline-block;
   }
   .about p {
     font-size: clamp(1rem, 2.2vw, 1.8rem);

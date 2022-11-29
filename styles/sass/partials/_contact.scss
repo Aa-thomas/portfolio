@@ -1,8 +1,9 @@
 @use './global/variables' as v;
 
 
-.contact {
+section.contact {
    text-align: center;
+   margin: 0;
 
    form {
       display: flex;
@@ -10,6 +11,8 @@
       padding: 50px;
       background-color: v.$background;
       gap: 50px;
+      padding: 0;
+      margin-top: 50px;
 
       .name-email-flex {
          display: flex;

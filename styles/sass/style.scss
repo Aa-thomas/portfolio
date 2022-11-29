@@ -1,6 +1,7 @@
 // Global
 @use './partials/global/setup';
-@use './partials/global/typography.scss';
+@use './partials/global/typography';
+@use './partials/global/observer';
 
 // Header
 @use './partials/header';
@@ -10,6 +11,9 @@
 
 // Skills
 @use './partials/skills';
+
+// Projects
+@use './partials/projects';
 
 // Contact
 @use './partials/contact';

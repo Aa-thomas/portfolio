@@ -753,7 +753,4 @@ footer {
             flex-direction: column;
     gap: 50px;
   }
-  .contact .wrapper, .skills .wrapper {
-    width: 100%;
-  }
 }

@@ -3,6 +3,7 @@
 
 section.contact {
    text-align: center;
+   margin: 0;
 
    form {
       display: flex;
@@ -10,6 +11,7 @@ section.contact {
       padding: 50px;
       background-color: v.$background;
       gap: 50px;
+      padding: 0;
 
       .name-email-flex {
          display: flex;

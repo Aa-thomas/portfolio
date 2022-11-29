@@ -5,21 +5,28 @@ section.about {
 
    .about-flex {
       display: flex;
-      margin-top: 50px;
       gap: 30px;
+      margin: 6% auto;
    }
 
-   img {
-      border-radius: 10px;
+   .img-container {
+      max-width: 450px;
+      margin: 0 auto;
+
+      img {
+         border-radius: 10px;
+         border: solid 8px v.$primary;
+      }
    }
 
    .text-container {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-evenly;
 
       p {
          text-align: justify;
+         font-size: v.$body-font;
       }
 
       ul.icon-list {

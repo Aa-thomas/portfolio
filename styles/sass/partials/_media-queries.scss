@@ -35,6 +35,13 @@
       }
    }
 
+   .projects {
+
+      .card {
+         flex-direction: column;
+      }
+   }
+
    .about {
       .about-flex {
          flex-direction: column;

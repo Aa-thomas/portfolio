@@ -298,21 +298,10 @@ h2 {
   display: inline-block;
 }
 
-.observe {
-  margin-top: 100px;
-}
-
-.card {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 50px;
-}
-
-.columns {
-  -webkit-columns: 3;
-     -moz-columns: 3;
-          columns: 3;
+h3 {
+  font-size: 1.5rem;
+  border-bottom: solid 4px #e9c46a;
+  display: inline-block;
 }
 
 .fade-in {
@@ -434,11 +423,16 @@ section.about .about-flex {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin-top: 50px;
   gap: 30px;
+  margin: 6% auto;
 }
-section.about img {
+section.about .img-container {
+  max-width: 450px;
+  margin: 0 auto;
+}
+section.about .img-container img {
   border-radius: 10px;
+  border: solid 8px black;
 }
 section.about .text-container {
   display: -webkit-box;
@@ -448,12 +442,13 @@ section.about .text-container {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
 }
 section.about .text-container p {
   text-align: justify;
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
 }
 section.about .text-container ul.icon-list {
   display: -webkit-box;
@@ -492,7 +487,7 @@ section.skills ul.icon-list {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin: 6% auto;
+  margin-top: 6%;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -517,6 +512,75 @@ section.skills ul.icon-list i, section.skills ul.icon-list .i {
 section.projects {
   text-align: center;
 }
+section.projects .card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 50px;
+  margin: 100px 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+section.projects .card .img-container {
+  max-width: 450px;
+}
+section.projects .card .img-container img {
+  border-radius: 10px;
+  border: solid 8px black;
+}
+section.projects .card .text-container {
+  text-align: justify;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+section.projects .card .text-container p {
+  margin: 10px 0;
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
+}
+section.projects .card .text-container .made-with {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 10px;
+}
+section.projects .card .text-container .made-with .icon-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20%;
+  margin-left: 10px;
+  font-size: 1.5rem;
+}
+section.projects .card .text-container .links {
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 10px;
+}
+section.projects .card .text-container .links a {
+  margin-right: 30px;
+  padding-bottom: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 10px;
+}
+section.projects .card .text-container .links a:hover, section.projects .card .text-container .links a:focus {
+  color: #e9c46a;
+}
+section.projects .card .text-container .links a p {
+  margin: 0;
+}
 
 section.contact {
   text-align: center;
@@ -534,6 +598,7 @@ section.contact form {
   background-color: #EAEAEA;
   gap: 50px;
   padding: 0;
+  margin-top: 50px;
 }
 section.contact form .name-email-flex {
   display: -webkit-box;
@@ -674,6 +739,12 @@ footer {
   }
   header nav.dropdown i.menu {
     display: block !important;
+  }
+  .projects .card {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .about .about-flex {
     -webkit-box-orient: vertical;

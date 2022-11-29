@@ -3,4 +3,64 @@
 section.projects {
    text-align: center;
 
+   .card {
+      display: flex;
+      gap: 50px;
+      margin: 100px 0;
+      align-items: center;
+
+      .img-container {
+         max-width: 450px;        
+
+         img {
+            border-radius: 10px;
+            border: solid 8px v.$primary;
+         }
+      }
+
+      .text-container {
+         text-align: justify;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+
+         p {
+            margin: 10px 0;
+            font-size: v.$body-font;
+         }
+         
+         .made-with {
+            display: flex;
+            margin-top: 10px;
+
+            .icon-list {
+               display: flex;
+               gap: 20%;
+               margin-left: 10px;
+               font-size: 1.5rem;
+            }
+         }
+
+         .links {
+            text-align: center;
+            display: flex;
+            margin-top: 10px;
+
+            a {
+               margin-right: 30px;
+               padding-bottom: 5px;
+               display: flex;
+               gap: 10px;
+               &:hover, &:focus {
+                  color: v.$secondary;
+               }
+
+               p {
+                  margin: 0;
+               }
+            }
+         }
+      }
+   }
 }
+   

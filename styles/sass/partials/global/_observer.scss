@@ -1,21 +1,8 @@
 @use './variables' as v;
 
-.observe {
-   margin-top: 100px;
-}
-
-.card {
-   display: flex;
-   gap: 50px;
-}
-
-.columns{
-   columns: 3;
-}
-
 .fade-in {
    opacity: 0;
-   transition: opacity 250ms ease-in
+   transition: opacity 250ms ease-in;
 }
 
 .fade-in.appear {
@@ -23,11 +10,15 @@
 }
 
 .from-left {
-   transform: translateX(-50%);
+   transform: 
+      translateX(-50%);
 }
 
 .from-right {
-   transform: translateX(50%);  
+
+   transform: 
+      translateX(50%);
+
 }
 
 .from-left, 

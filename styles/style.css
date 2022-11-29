@@ -715,6 +715,7 @@ footer {
   background-color: #EAEAEA;
   color: black;
   text-align: center;
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
 }
 
 @media (max-width: 900px) {

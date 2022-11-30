@@ -344,6 +344,7 @@ header {
   background: url(../images/header-med.jpg);
   background-size: cover;
   height: 100vh;
+  position: relative;
   /* typewriter cursor */
   /* typewriter cursor blink effect */
 }
@@ -760,11 +761,14 @@ footer {
     text-align: center;
   }
   section.projects .card .img-container {
-    width: 75% !important;
-    min-width: 0 !important;
+    width: 75%;
+    min-width: 0;
   }
   section.projects .card .text-container {
-    width: 100% !important;
+    width: 100%;
+  }
+  section.projects .card .text-container .made-with .icon-list {
+    font-size: 1.2rem;
   }
   .about .about-flex {
     -webkit-box-orient: vertical;
@@ -772,5 +776,13 @@ footer {
         -ms-flex-direction: column;
             flex-direction: column;
     gap: 50px;
+  }
+}
+@media (max-width: 500px) {
+  header h1 {
+    font-size: 2rem;
+  }
+  section.projects .card .text-container .made-with .icon-list {
+    font-size: 1rem;
   }
 }

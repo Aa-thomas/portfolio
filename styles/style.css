@@ -306,8 +306,8 @@ h3 {
 
 .fade-in {
   opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
+  -webkit-transition: 250ms ease-out;
+  transition: 250ms ease-out;
 }
 
 .fade-in.appear {
@@ -326,10 +326,10 @@ h3 {
 
 .from-left,
 .from-right {
-  -webkit-transition: opacity 250ms ease-in, -webkit-transform 400ms ease-in;
-  transition: opacity 250ms ease-in, -webkit-transform 400ms ease-in;
-  transition: opacity 250ms ease-in, transform 400ms ease-in;
-  transition: opacity 250ms ease-in, transform 400ms ease-in, -webkit-transform 400ms ease-in;
+  -webkit-transition: opacity 250ms ease-out, -webkit-transform 400ms ease-out;
+  transition: opacity 250ms ease-out, -webkit-transform 400ms ease-out;
+  transition: opacity 250ms ease-out, transform 400ms ease-out;
+  transition: opacity 250ms ease-out, transform 400ms ease-out, -webkit-transform 400ms ease-out;
   opacity: 0;
 }
 

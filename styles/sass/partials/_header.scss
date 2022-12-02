@@ -5,11 +5,13 @@ header {
    background-size: cover;
    height: 100vh;
    position: relative;
-   
 
-   nav.desktop ul{
+   nav {
       display: flex;
-      gap: 10%;
+   }
+   .nav-menu {
+      display: flex;
+      gap: 17%;
       font-size: 1.2rem;
       padding-top: 30px;
 
@@ -19,25 +21,25 @@ header {
       }
    }
 
-   ul.dropdown-content {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
+   .hamburger {
+      display: none;
+      cursor: pointer;
+      padding-top: 30px;
+      z-index: 10;
 
-      i.xmark {
-         display: none;
+      .bar {
+         display: block;
+         width: 25px;
+         height: 3px;
+         margin: 5px auto;
+         transition: all 0.3s ease-in-out;
+         background-color: black;
+         border: none;
+
       }
-
-      .menu {
-         display: none;
-      }
-
-      a {
-         display: none;
-      }
-
-
    }
+
+   
 
    h1 {
       position:absolute;
@@ -47,7 +49,7 @@ header {
    }
    
    i {
-      display: none !important;
+      display: block;
       font-size: 2rem;
       color: v.$primary;
       padding-top: 30px;

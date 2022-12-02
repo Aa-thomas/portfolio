@@ -1,8 +1,13 @@
+@use './global/variables' as v;
 
 @media (max-width: 900px) {
    header {
       background-image: url(../images/header-sm.jpg);
       background-size: cover;
+
+      .nav-menu {
+         gap:10%;
+      }
       
 
       nav a {
@@ -23,17 +28,44 @@
    
 
    header {
-      nav.desktop ul {
+      .nav-menu {
+         position: fixed;
+         left: -100%;
+         top: 0px;
          flex-direction: column;
-         gap: 30px;
-      }
+         gap: 0;
+         color: v.$primary;
+         background-color: v.$background;
+         width: 100%;
+         text-align: center;
+         transition: 0.3s;
 
-      nav.dropdown {
-
-         i.menu {
-            display: block !important;
+         .nav-item {
+            margin: 16px 0;
          }
       }
+
+      .nav-menu.active {
+         left: 0;
+      }
+
+      .hamburger {
+         display: block;
+      }
+      
+      .hamburger.active .bar:nth-child(2) {
+         opacity: 0;
+      }
+
+      .hamburger.active .bar:nth-child(1) {
+         transform: translateY(8px) rotate(45deg);
+      }
+
+      .hamburger.active .bar:nth-child(3) {
+         transform: translateY(-8px) rotate(-45deg);
+      }
+
+
    }
 
    section.projects {

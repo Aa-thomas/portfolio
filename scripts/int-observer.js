@@ -9,8 +9,10 @@ const options = {
 const observer = new IntersectionObserver((entries, observer) => {
 	entries.forEach((entry) => {
 		if (!entry.isIntersecting) return;
-		console.log(entry.target);
-		observer.unobserve(entry.target);
+		if (entry.target.classList.contains('about-flex'))
+			document.querySelector('.nav-menu').classList.remove('active');
+		if (!entry.target.classList.contains('about-flex'))
+			observer.unobserve(entry.target);
 	});
 }, options);
 

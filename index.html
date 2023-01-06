@@ -11,20 +11,13 @@
    <script src="https://kit.fontawesome.com/9e29c23d4f.js" crossorigin="anonymous"></script>
    <script src="https://code.iconify.design/iconify-icon/1.0.1/iconify-icon.min.js"></script>
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
    <!-- Header -->
    <header>
       <div class="wrapper">
-         <!-- Navigation -->
-         <!-- <nav class="desktop">
-            <ul>
-               <li><a href="#about">About</a></li>
-               <li><a href="#projects">Projects</a></li>
-               <li><a href="#contact">Contact</a></li>
-            </ul>
-         </nav> -->
          <nav>
             <div class="hamburger">
                <span class="bar"></span>
@@ -57,11 +50,11 @@
       <section class="about" id="about">
          <div class="wrapper">
             <h2>About Me</h2>
-            <div class="about-flex observe fade-in">
-               <div class="img-container">
+            <div class="about-flex" >
+               <div class="img-container" data-aos="fade-right">
                   <img src="./images/headshot.jpeg" alt="A picture of Aaron Thomas with a friendly smile">
                </div>
-               <div class="text-container">
+               <div class="text-container" data-aos="fade-left">
                   <p>
                      I am a full-stack web developer with a passion for creating beautiful and functional websites. I am curently enrolled at Juno College. I have experience with HTML, CSS, JavaScript, React, Node.js, Express, Firebase, and MySQL. I am currently looking for a full-time position as a web developer.
                   </p>
@@ -94,7 +87,7 @@
       <section class="skills">
          <div class="wrapper">
             <h2>Skills</h2>
-            <ul class="icon-list observe fade-in">
+            <ul class="icon-list" data-aos="zoom-out">
                <li>
                   <i class="fa-brands fa-html5"></i>
                   <p>HTML</p>
@@ -154,17 +147,64 @@
          <div class="wrapper">
             <h2>Projects</h2>
             <div class="observe">
-               <div class="card observe fade-in">
-                  <div class="img-container">
-                     <img src="./images/deviceshot.png" alt="A screenshot of the _______ Homepage"
-                     class="observe slide-in from-left">
+               <div class="card">
+                  <div class="img-container" data-aos="zoom-in-right">
+                     <img src="./images/habit-ss.png" alt="The Habit Tracker homepage, viewed on a MacBook and Iphone" class="observe">
                   </div>
-                  <div class="text-container observe slide-in from-right">
+                  <div class="text-container observe" data-aos="zoom-in-left">
                      <div class="description">
-                        <h3>Worldly Recipes</h3>
-                        <p>Craving something new? You've now got thousands of recipes at your fingertips!
-                           Worldly Recipes is a recipe app that allows users to search for recipes by country, 
-                           ingredient, or category. Powered by the Edamam Recipe API.
+                        <h3>Habit Tracker</h3>
+                        <p>insert decdcription</p>
+                     </div>
+                     <div class="icons-container">
+                        <div class="made-with">
+                           <p>Made with |</p>
+                           <ul class="icon-list">
+                              <li>
+                                 <i class="fa-brands fa-html5"></i>
+                              </li>
+                              <li>
+                                 <i class="fa-brands fa-css3-alt"></i>
+                              </li>
+                              <li>
+                                 <i class="fa-brands fa-square-js"></i>
+                              </li>
+                              <li>
+                                 <i class="fa-brands fa-react"></i>
+                        
+                              </li>
+                              
+                              <li>
+                                 <iconify-icon class="i" icon="mdi:firebase"></iconify-icon>
+                                 
+                              </li>
+                              
+
+                           </ul>
+                        </div>
+                        <div class="links">
+                           <a href="https://github.com/Aa-thomas/habit-tracker">
+                              <i class="fa-brands fa-github"></i>
+                              <p>GitHub</p>
+                           </a>
+                           <a href="https://habit-tracker-main.netlify.app/">
+                              <i class="fa-solid fa-computer"></i>
+                              <p>Live</p>
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="card">
+                  <div class="img-container" data-aos="zoom-in-right">
+                     <img src="./images/moviegifs-ss.png" alt="The Movie Gifs Spoilers homepage, viewed on a MacBook and Iphone"
+                     class="observe">
+                  </div>
+                  <div class="text-container observe" data-aos="zoom-in-left">
+                     <div class="description">
+                        <h3>Movie Gif Spoilers</h3>
+                        <p>Search a movie title and we'll show you gifs related to the plot. Like one? Save it and see your collection in 'View Favs'! Want more of the same keyword? Click the gif itself or 'giphy' for more results.
                         </p>
                      </div>
                      <div class="icons-container">
@@ -181,35 +221,37 @@
                                  <i class="fa-brands fa-square-js"></i>
                               </li>
                               <li>
-                                 <i class="fa-brands fa-sass"></i>
+                                 <i class="fa-brands fa-react"></i>
                               </li>
+                              <li>
+                                 <iconify-icon class="i" icon="mdi:firebase"></iconify-icon>
                               <li>
                                  <i class="fa-solid fa-code"></i>
                               </li>
                            </ul>
                         </div>
                         <div class="links">
-                           <a href="https://github.com/juno-aaron-estera-project-2/worldly-recipes">
+                           <a href="https://github.com/Movie-gif-spoilers/moveGifSpoilers">
                               <i class="fa-brands fa-github"></i>
-                              <p>See My Code</p>
+                              <p>GitHub</p>
                            </a>
-                           <a href="https://worldly-recipes.netlify.app">
+                           <a href="https://group-06-project-04-main.netlify.app/home">
                               <i class="fa-solid fa-computer"></i>
-                              <p>See It Live</p>
+                              <p>Live</p>
                            </a>
                         </div>
                      </div>
                   </div>
                </div>
 
-               <div class="card observe fade-in">
-                  <div class="img-container">
-                     <img src="./images/deviceshot.png" alt="A screenshot of the Boat Ride Adventures Homepage" class="observe slide-in from-left">
+               <div class="card">
+                  <div class="img-container" data-aos="zoom-in-right">
+                     <img src="./images/boat-ss.png" alt="The Boat Ride Adventures homepage, viewed on a MacBook and Iphone" class="observe">
                   </div>
-                  <div class="text-container observe slide-in from-right">
+                  <div class="text-container observe" data-aos="zoom-in-left">
                      <div class="description">
                         <h3>Boat Ride Adventures</h3>
-                        <p>A mock website of a cruise service. 3 pages including a Home, Blog and Contact section</p>
+                        <p>A mock website of a cruise service. 3 pages including a Homepage, a Blog, and Contact Form</p>
                      </div>
                      <div class="icons-container">
                         <div class="made-with">
@@ -232,22 +274,22 @@
                         <div class="links">
                            <a href="https://github.com/Aa-thomas/Aaron-Thomas-Project-1">
                               <i class="fa-brands fa-github"></i>
-                              <p>See My Code</p>
+                              <p>GitHub</p>
                            </a>
                            <a href="https://atproject1.netlify.app/">
                               <i class="fa-solid fa-computer"></i>
-                              <p>See It Live</p>
+                              <p>Live</p>
                            </a>
                         </div>
                      </div>
                   </div>
                </div>
 
-               <div class="card observe fade-in">
-                  <div class="img-container">
-                     <img src="./images/deviceshot.png" alt="A screenshot of the Animal Refuge Homepage" class="observe slide-in from-left">
+               <div class="card">
+                  <div class="img-container" data-aos="zoom-in-right">
+                     <img src="./images/animal-refuge-ss.png" alt="The Animal Refuge homepage, viewed on a MacBook and Iphone" >
                   </div>
-                  <div class="text-container observe slide-in from-right">
+                  <div class="text-container" data-aos="zoom-in-left">
                      <div class="description">
                         <h3>Animal Refuge</h3>
                         <p>A mock website of an exotic animal shelter. </p>
@@ -273,11 +315,11 @@
                         <div class="links">
                            <a href="https://github.com/Aa-thomas/AaronThomas-Assignment1">
                               <i class="fa-brands fa-github"></i>
-                              <p>See My Code</p>
+                              <p>GitHub</p>
                            </a>
                            <a href="https://superlative-basbousa-252180.netlify.app/">
                               <i class="fa-solid fa-computer"></i>
-                              <p>See It Live</p>
+                              <p>Live</p>
                            </a>
                         </div>
                      </div>
@@ -303,11 +345,11 @@
             <input type="email" name="email" id="email" placeholder="Email" required>
 
             <label for="phone" class="sr-only">Phone</label>
-            <input type="phone" name="phone" id="phone" placeholder="Phone">
+            <input type="phone" name="phone" id="phone" placeholder="Phone (optional)">
          </div>
 
          <label for="subject" class="sr-only">Subject</label>
-            <input type="text" name="subject" id="subject" placeholder="Subject">
+            <input type="text" name="subject" id="subject" placeholder="Subject (optional)">
 
          <label for="message" class="sr-only">Message</label>
          <textarea name="message" id="message" cols="30" rows="6" placeholder="Message" required></textarea>
@@ -320,6 +362,11 @@
    </main>
    <footer> Designed and created by Aaron Thomas 2022</footer>   
 </body>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+   AOS.init();
+</script>
+</script>
 <script src="./scripts/menu.js"></script>
 <script src="./scripts/typedtext.js"></script>
 <script src="./scripts/int-observer.js"></script>

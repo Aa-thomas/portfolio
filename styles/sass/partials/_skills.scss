@@ -3,6 +3,10 @@
 section.skills {
    text-align: center;
 
+   .aos-animate{
+      transition: 0.8s;
+   }
+
    ul.icon-list {
       display: flex;
       flex-wrap: wrap;

@@ -14,6 +14,10 @@ section.contact {
       padding: 0;
       margin-top: 50px;
 
+      .aos-animate{
+         transition: 0.8s;
+      }
+
       .name-email-flex {
          display: flex;
          justify-content: space-between;
@@ -73,14 +77,14 @@ section.contact {
          border: none;
          border-radius: 10px;
          text-transform: uppercase;
-         background-color: v.$primary;
+         background-color: v.$secondary;
          color: v.$background;
          padding: 15px 10px;
          transition: 0.2s;
          &:hover, &:focus {
             transition: 0.2s;
             transform: scale(1.03);
-            background-color: v.$secondary;
+            background-color: v.$primary;
          }
       }
 

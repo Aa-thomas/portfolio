@@ -3,19 +3,24 @@
 section.about {
    text-align: center;
 
+   .aos-animate{
+      transition: 0.8s;
+   }
+
    .about-flex {
       display: flex;
-      gap: 30px;
+      gap: 10%;
       margin: 6% auto;
    }
 
    .img-container {
-      max-width: 450px;
+      max-width: 300px;
       margin: 0 auto;
+      margin-bottom: 40px;
 
       img {
          border-radius: 10px;
-         border: solid 8px v.$primary;
+         // border: solid 8px v.$primary;
       }
    }
 
@@ -32,6 +37,7 @@ section.about {
       ul.icon-list {
          display: flex;
          margin-top: 30px;
+         justify-content: center;
       
          li {
             font-size: 1rem;

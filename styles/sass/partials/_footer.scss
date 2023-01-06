@@ -5,4 +5,13 @@ footer {
    color: v.$primary;
    text-align: center;
    font-size: v.$body-font;
+   display: flex;
+   flex-direction: column;
+   gap: 30px;
+
+   .footer-nav-menu{
+      display: flex;
+      justify-content: center;
+      gap: 10%;
+   }
 }

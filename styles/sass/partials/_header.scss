@@ -1,7 +1,6 @@
 @use './global/variables' as v;
 
 header {
-   background: url(../images/header-med.jpg);
    background-size: cover;
    height: 100vh;
    position: relative;
@@ -13,7 +12,8 @@ header {
       display: flex;
       gap: 17%;
       font-size: 1.2rem;
-      padding-top: 30px;
+      padding-top: 30px;     
+      height: 99vh;
 
       a {
          font-weight: 700;
@@ -33,7 +33,7 @@ header {
          height: 3px;
          margin: 5px auto;
          transition: all 0.3s ease-out;
-         background-color: black;
+         background-color: v.$primary;
          border: none;
       }
    }

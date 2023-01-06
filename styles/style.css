@@ -267,7 +267,7 @@ a {
 a:hover, a:focus {
   -webkit-transition: 0.2s;
   transition: 0.2s;
-  border-bottom: solid 4px #e9c46a;
+  border-bottom: solid 4px #ffa818;
   -webkit-transform: scale(1.1);
           transform: scale(1.1);
 }
@@ -279,8 +279,8 @@ button {
 html {
   font-size: 125%;
   font-family: "Sen", sans-serif;
-  color: black;
-  background-color: #EAEAEA;
+  color: white;
+  background-color: black;
 }
 
 ul {
@@ -294,13 +294,13 @@ a {
 
 h2 {
   font-size: 2rem;
-  border-bottom: solid 4px #e9c46a;
+  border-bottom: solid 4px #ffa818;
   display: inline-block;
 }
 
 h3 {
   font-size: 1.5rem;
-  border-bottom: solid 4px #e9c46a;
+  border-bottom: solid 4px #ffa818;
   display: inline-block;
 }
 
@@ -341,7 +341,6 @@ h3 {
 }
 
 header {
-  background: url(../images/header-med.jpg);
   background-size: cover;
   height: 100vh;
   position: relative;
@@ -360,6 +359,7 @@ header .nav-menu {
   gap: 17%;
   font-size: 1.2rem;
   padding-top: 30px;
+  height: 99vh;
 }
 header .nav-menu a {
   font-weight: 700;
@@ -379,7 +379,7 @@ header .hamburger .bar {
   margin: 5px auto;
   -webkit-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
-  background-color: black;
+  background-color: white;
   border: none;
 }
 header h1 {
@@ -390,12 +390,12 @@ header h1 {
 header i {
   display: block;
   font-size: 2rem;
-  color: black;
+  color: white;
   padding-top: 30px;
   cursor: pointer;
 }
 header span {
-  border-bottom: solid 4px #e9c46a;
+  border-bottom: solid 4px #ffa818;
 }
 header span#carat {
   border: none;
@@ -407,7 +407,7 @@ header span#carat {
     color: transparent;
   }
   50% {
-    color: #e9c46a;
+    color: #ffa818;
   }
 }
 @keyframes blink-caret {
@@ -415,27 +415,31 @@ header span#carat {
     color: transparent;
   }
   50% {
-    color: #e9c46a;
+    color: #ffa818;
   }
 }
 
 section.about {
   text-align: center;
 }
+section.about .aos-animate {
+  -webkit-transition: 0.8s;
+  transition: 0.8s;
+}
 section.about .about-flex {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  gap: 30px;
+  gap: 10%;
   margin: 6% auto;
 }
 section.about .img-container {
-  max-width: 450px;
+  max-width: 300px;
   margin: 0 auto;
+  margin-bottom: 40px;
 }
 section.about .img-container img {
   border-radius: 10px;
-  border: solid 8px black;
 }
 section.about .text-container {
   display: -webkit-box;
@@ -458,10 +462,13 @@ section.about .text-container ul.icon-list {
   display: -ms-flexbox;
   display: flex;
   margin-top: 30px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 section.about .text-container ul.icon-list li {
   font-size: 1rem;
-  color: black;
+  color: white;
   -ms-flex-preferred-size: 30%;
       flex-basis: 30%;
   -webkit-transition: 0.2s;
@@ -470,7 +477,7 @@ section.about .text-container ul.icon-list li {
 section.about .text-container ul.icon-list li:hover, section.about .text-container ul.icon-list li:focus {
   -webkit-transition: 0.2s;
   transition: 0.2s;
-  color: #e9c46a;
+  color: #ffa818;
   -webkit-transform: scale(1.1);
           transform: scale(1.1);
 }
@@ -483,6 +490,10 @@ section.about .text-container ul.icon-list li p {
 
 section.skills {
   text-align: center;
+}
+section.skills .aos-animate {
+  -webkit-transition: 0.8s;
+  transition: 0.8s;
 }
 section.skills ul.icon-list {
   display: -webkit-box;
@@ -506,7 +517,7 @@ section.skills ul.icon-list li {
 section.skills ul.icon-list li:hover {
   -webkit-transition: 0.2s;
   transition: 0.2s;
-  color: #e9c46a;
+  color: #ffa818;
 }
 section.skills ul.icon-list i, section.skills ul.icon-list .i {
   font-size: 3rem;
@@ -524,6 +535,10 @@ section.projects .card {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+section.projects .card .aos-animate {
+  -webkit-transition: 0.8s;
+  transition: 0.8s;
 }
 section.projects .card .img-container {
   width: 45%;
@@ -554,10 +569,12 @@ section.projects .card .text-container p {
 section.projects .card .text-container a.psdtext {
   display: inline;
   text-decoration: underline;
+  -webkit-text-decoration-color: #ffa818;
+          text-decoration-color: #ffa818;
   border: none;
 }
 section.projects .card .text-container a.psdtext:hover, section.projects .card .text-container a.psdtext:focus {
-  color: #e9c46a;
+  color: #ffa818;
 }
 section.projects .card .text-container .made-with {
   display: -webkit-box;
@@ -588,6 +605,9 @@ section.projects .card .text-container .links {
   display: -ms-flexbox;
   display: flex;
   margin-top: 10px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 section.projects .card .text-container .links a {
   margin-right: 30px;
@@ -598,7 +618,7 @@ section.projects .card .text-container .links a {
   gap: 10px;
 }
 section.projects .card .text-container .links a:hover, section.projects .card .text-container .links a:focus {
-  color: #e9c46a;
+  color: #ffa818;
 }
 section.projects .card .text-container .links a p {
   margin: 0;
@@ -617,10 +637,14 @@ section.contact form {
       -ms-flex-direction: column;
           flex-direction: column;
   padding: 50px;
-  background-color: #EAEAEA;
+  background-color: black;
   gap: 50px;
   padding: 0;
   margin-top: 50px;
+}
+section.contact form .aos-animate {
+  -webkit-transition: 0.8s;
+  transition: 0.8s;
 }
 section.contact form .name-email-flex {
   display: -webkit-box;
@@ -632,41 +656,41 @@ section.contact form .name-email-flex {
 }
 section.contact form input,
 section.contact form textarea {
-  background-color: #EAEAEA;
-  color: black;
+  background-color: black;
+  color: white;
   border: none;
   outline: none;
-  border-bottom: solid 2px black;
+  border-bottom: solid 2px white;
   font-size: clamp(0.8rem, 1.6vw, 1rem);
 }
 section.contact form input::-webkit-input-placeholder, section.contact form textarea::-webkit-input-placeholder {
-  color: black;
+  color: white;
   opacity: 1;
 }
 section.contact form input::-moz-placeholder, section.contact form textarea::-moz-placeholder {
-  color: black;
+  color: white;
   opacity: 1;
 }
 section.contact form input:-ms-input-placeholder, section.contact form textarea:-ms-input-placeholder {
-  color: black;
+  color: white;
   opacity: 1;
 }
 section.contact form input::-ms-input-placeholder, section.contact form textarea::-ms-input-placeholder {
-  color: black;
+  color: white;
   opacity: 1;
 }
 section.contact form input::placeholder,
 section.contact form textarea::placeholder {
-  color: black;
+  color: white;
   opacity: 1;
 }
 section.contact form input:hover, section.contact form input:focus,
 section.contact form textarea:hover,
 section.contact form textarea:focus {
-  border-color: #e9c46a;
+  border-color: #ffa818;
 }
 section.contact form textarea {
-  border: solid 2px black;
+  border: solid 2px white;
   border-radius: 10px;
   padding: 20px;
   -webkit-transition: 0.2s;
@@ -683,7 +707,7 @@ section.contact form input#phone,
 section.contact form input#subject {
   width: 28%;
   padding: 10px 20px;
-  color: black;
+  color: white;
   opacity: 10;
   -webkit-transition: 0.2s;
   transition: 0.2s;
@@ -699,7 +723,7 @@ section.contact form input#subject:hover {
           transform: scaleX(1.08);
   border-bottom-width: 3px;
   outline: none;
-  outline-color: black;
+  outline-color: white;
 }
 section.contact form input#subject {
   width: 100%;
@@ -708,8 +732,8 @@ section.contact form button {
   border: none;
   border-radius: 10px;
   text-transform: uppercase;
-  background-color: black;
-  color: #EAEAEA;
+  background-color: #ffa818;
+  color: black;
   padding: 15px 10px;
   -webkit-transition: 0.2s;
   transition: 0.2s;
@@ -719,7 +743,7 @@ section.contact form button:hover, section.contact form button:focus {
   transition: 0.2s;
   -webkit-transform: scale(1.03);
           transform: scale(1.03);
-  background-color: #e9c46a;
+  background-color: white;
 }
 @media (max-width: 768px) {
   section.contact .name-email-flex {
@@ -734,15 +758,31 @@ section.contact form button:hover, section.contact form button:focus {
 }
 
 footer {
-  background-color: #EAEAEA;
-  color: black;
+  background-color: black;
+  color: white;
   text-align: center;
   font-size: clamp(0.8rem, 2vw, 1.1rem);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 30px;
+}
+footer .footer-nav-menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 10%;
 }
 
 @media (max-width: 900px) {
   header {
-    background-image: url(../images/header-sm.jpg);
     background-size: cover;
   }
   header .nav-menu {
@@ -765,10 +805,13 @@ footer {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    gap: 0;
-    color: black;
-    background-color: #EAEAEA;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    color: white;
+    background-color: black;
     width: 100%;
+    font-size: 1.5rem;
     text-align: center;
     -webkit-transition: 0.6s;
     transition: 0.6s;
@@ -798,7 +841,9 @@ footer {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    text-align: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
   }
   section.projects .card .img-container {
     width: 75%;
@@ -806,6 +851,21 @@ footer {
   }
   section.projects .card .text-container {
     width: 100%;
+    text-align: center !important;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  section.projects .card .text-container .made-with {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
   }
   section.projects .card .text-container .made-with .icon-list {
     font-size: 1.2rem;

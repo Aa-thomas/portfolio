@@ -551,6 +551,14 @@ section.projects .card .text-container p {
   margin: 10px 0;
   font-size: clamp(0.8rem, 2vw, 1.1rem);
 }
+section.projects .card .text-container a.psdtext {
+  display: inline;
+  text-decoration: underline;
+  border: none;
+}
+section.projects .card .text-container a.psdtext:hover, section.projects .card .text-container a.psdtext:focus {
+  color: #e9c46a;
+}
 section.projects .card .text-container .made-with {
   display: -webkit-box;
   display: -ms-flexbox;

@@ -30,6 +30,14 @@ section.projects {
             margin: 10px 0;
             font-size: v.$body-font;
          }
+         a.psdtext {
+            display: inline;
+            text-decoration: underline;
+            border:none;
+            &:hover,&:focus {
+               color: v.$secondary;
+            }
+         }
          
          .made-with {
             display: flex;

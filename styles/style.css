@@ -728,6 +728,10 @@ section.contact form input#subject:hover {
 section.contact form input#subject {
   width: 100%;
 }
+section.contact form input#subject:hover, section.contact form input#subject:focus {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+}
 section.contact form button {
   border: none;
   border-radius: 10px;

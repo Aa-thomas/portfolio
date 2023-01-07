@@ -12,3 +12,4 @@ document.querySelectorAll('.nav-link').forEach((link) =>
 		navMenu.classList.remove('active');
 	})
 );
+

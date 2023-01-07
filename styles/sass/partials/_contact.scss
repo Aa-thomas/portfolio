@@ -71,6 +71,9 @@ section.contact {
 
       input#subject {
          width: 100%;
+         &:hover, &:focus {
+            transform: scale(1.5);
+         }
       }
 
       button {

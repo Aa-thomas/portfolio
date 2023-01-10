@@ -77,11 +77,13 @@ section.projects {
                gap: 10px;
                &:hover, &:focus {
                   color: v.$secondary;
+                  border: none;
                }
 
                p {
                   margin: 0;
                }
+
             }
          }
       }

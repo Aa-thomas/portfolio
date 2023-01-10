@@ -46,7 +46,7 @@ section.contact {
          padding: 20px;
          transition: 0.2s;
          &:focus,&:hover {
-            transform: scale(1.03);
+            transform: scale(1.02);
             border-width: 3px;
          }
       }
@@ -72,7 +72,7 @@ section.contact {
       input#subject {
          width: 100%;
          &:hover, &:focus {
-            transform: scale(1.5);
+            transform: scale(1.02);
          }
       }
 
@@ -86,7 +86,7 @@ section.contact {
          transition: 0.2s;
          &:hover, &:focus {
             transition: 0.2s;
-            transform: scale(1.03);
+            transform: scale(1.02);
             background-color: v.$primary;
          }
       }

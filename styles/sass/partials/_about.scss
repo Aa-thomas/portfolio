@@ -14,13 +14,21 @@ section.about {
    }
 
    .img-container {
-      max-width: 300px;
+      max-width: 250px;
+      width: 100%;
       margin: 0 auto;
       margin-bottom: 40px;
 
       img {
-         border-radius: 10px;
-         // border: solid 8px v.$primary;
+         width: 100%;
+      }
+
+      p.sig {
+         font-family: 'Boss signature', sans-serif;
+         color: v.$primary;
+         font-size: 2rem;
+         margin-top: 20px;
+         min-width: 00px;
       }
    }
 
@@ -57,6 +65,7 @@ section.about {
             p {
                text-align: center;
             }
+
          }
       }
    }

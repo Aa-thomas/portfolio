@@ -42,8 +42,8 @@ faders.forEach((fader) => {
 
 // Slide-In
 
-const sliders = document.querySelectorAll('.slide-in');
+// const sliders = document.querySelectorAll('.slide-in');
 
-sliders.forEach((slider) => {
-	appearOnScroll.observe(slider);
-});
+// sliders.forEach((slider) => {
+// 	appearOnScroll.observe(slider);
+// });

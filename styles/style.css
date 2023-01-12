@@ -542,19 +542,22 @@ section.skills ul.icon-list i, section.skills ul.icon-list .i {
 section.projects {
   text-align: center;
 }
+section.projects h2 {
+  margin-bottom: 100px;
+}
 section.projects .card {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   gap: 50px;
-  margin: 50px 0;
+  margin-bottom: 200px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
 }
 section.projects .card .aos-animate {
-  -webkit-transition: 0.8s;
-  transition: 0.8s;
+  -webkit-transition: 1s;
+  transition: 1s;
 }
 section.projects .card .img-container {
   width: 45%;
@@ -621,9 +624,9 @@ section.projects .card .text-container .links {
   display: -ms-flexbox;
   display: flex;
   margin-top: 10px;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
 }
 section.projects .card .text-container .links a {
   margin-right: 30px;
@@ -660,7 +663,7 @@ section.projects .card .text-container .links a p {
 
 section.contact {
   text-align: center;
-  margin: 0;
+  margin-top: 200px;
 }
 section.contact form {
   display: -webkit-box;
@@ -677,8 +680,8 @@ section.contact form {
   margin-top: 50px;
 }
 section.contact form .aos-animate {
-  -webkit-transition: 0.8s;
-  transition: 0.8s;
+  -webkit-transition: 1s;
+  transition: 1s;
 }
 section.contact form .name-email-flex {
   display: -webkit-box;
@@ -878,6 +881,15 @@ footer .footer-nav-menu a:hover, footer .footer-nav-menu a:focus {
     -webkit-transform: translateY(-8px) rotate(-45deg);
             transform: translateY(-8px) rotate(-45deg);
   }
+  section.about .sig {
+    width: 100%;
+  }
+  section.about .text-container {
+    width: 100%;
+  }
+  section.about .img-container {
+    max-width: 60%;
+  }
   section.projects .card {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -911,6 +923,11 @@ footer .footer-nav-menu a:hover, footer .footer-nav-menu a:focus {
   }
   section.projects .card .text-container .made-with .icon-list {
     font-size: 1.2rem;
+  }
+  section.projects .card .text-container .links {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
   }
   .about .about-flex {
     -webkit-box-orient: vertical;

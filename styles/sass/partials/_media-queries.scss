@@ -68,6 +68,21 @@
 
    }
 
+   section.about {
+
+      .sig {
+         width: 100%;
+      }
+
+      .text-container {
+         width: 100%;
+      }
+
+      .img-container {
+         max-width: 60%;
+      }
+   }
+
    section.projects {
 
       .card {
@@ -93,6 +108,10 @@
                }
 
                
+            }
+
+            .links {
+               justify-content: center;
             }
          }
       }

@@ -3,14 +3,18 @@
 section.projects {
    text-align: center;
 
+   h2 {
+      margin-bottom: 100px;
+   }
+
    .card {
       display: flex;
       gap: 50px;
-      margin: 50px 0;
+      margin-bottom: 200px;
       align-items: center;
 
       .aos-animate{
-         transition: 0.8s;
+         transition: 1s;
       }
 
       .img-container {
@@ -68,7 +72,7 @@ section.projects {
             text-align: center;
             display: flex;
             margin-top: 10px;
-            justify-content: center;
+            justify-content: left;
 
             a {
                margin-right: 30px;

@@ -3,7 +3,7 @@
 
 section.contact {
    text-align: center;
-   margin: 0;
+   margin-top: 200px;
 
    form {
       display: flex;
@@ -15,7 +15,7 @@ section.contact {
       margin-top: 50px;
 
       .aos-animate{
-         transition: 0.8s;
+         transition: 1s;
       }
 
       .name-email-flex {

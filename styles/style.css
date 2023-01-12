@@ -818,6 +818,10 @@ footer .footer-nav-menu {
           justify-content: center;
   gap: 10%;
 }
+footer .footer-nav-menu a:hover, footer .footer-nav-menu a:focus {
+  border: none;
+  color: #ffa818;
+}
 
 @media (max-width: 900px) {
   header {

@@ -13,5 +13,10 @@ footer {
       display: flex;
       justify-content: center;
       gap: 10%;
+
+      a:hover, a:focus {
+         border: none;
+         color: v.$secondary;
+      }
    }
 }

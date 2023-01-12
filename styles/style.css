@@ -434,7 +434,7 @@ section.about .about-flex {
   margin: 6% auto;
 }
 section.about .img-container {
-  max-width: 250px;
+  max-width: 30%;
   width: 100%;
   margin: 0 auto;
   margin-bottom: 40px;
@@ -445,9 +445,9 @@ section.about .img-container img {
 section.about .img-container p.sig {
   font-family: "Boss signature", sans-serif;
   color: white;
-  font-size: 2rem;
+  font-size: 3rem;
   margin-top: 20px;
-  min-width: 0px;
+  min-width: 100px;
 }
 section.about .text-container {
   display: -webkit-box;
@@ -460,10 +460,15 @@ section.about .text-container {
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
+  width: 70%;
+  font-size: 3rem;
+  line-height: 1.6;
+  letter-spacing: 1.5px;
 }
 section.about .text-container p {
   text-align: justify;
-  font-size: clamp(0.8rem, 2vw, 1.1rem);
+  font-size: clamp(0.6rem, 2vw, 0.9rem);
+  margin: 10px 0;
 }
 section.about .text-container ul.icon-list {
   display: -webkit-box;

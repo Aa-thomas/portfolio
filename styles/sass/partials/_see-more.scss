@@ -1,0 +1,12 @@
+@use './global/variables' as v;
+
+.see-more {
+   text-align: center;
+   height: 100vh;
+   font-family: 'Boss signature', sans-serif;   
+   font-size: clamp(2rem,10vw, 5rem);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   color: v.$primary;
+}

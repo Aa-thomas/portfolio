@@ -636,6 +636,23 @@ section.projects .card .text-container .links a p {
   margin: 0;
 }
 
+.see-more {
+  text-align: center;
+  height: 100vh;
+  font-family: "Boss signature", sans-serif;
+  font-size: clamp(2rem, 10vw, 5rem);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: white;
+}
+
 section.contact {
   text-align: center;
   margin: 0;

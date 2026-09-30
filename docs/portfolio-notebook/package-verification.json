@@ -1,0 +1,99 @@
+{
+  "checkedAt": "2026-09-30T22:32:13.422210+00:00",
+  "localLinkChecks": 259,
+  "brokenLocalLinks": [],
+  "templateVariantLinks": 8,
+  "ticketCount": 10,
+  "scenarioCount": 24,
+  "dependencies": {
+    "PF-01": [],
+    "PF-02": [],
+    "PF-03": [
+      "PF-01",
+      "PF-02"
+    ],
+    "PF-04": [
+      "PF-03"
+    ],
+    "PF-05": [
+      "PF-04"
+    ],
+    "PF-06": [
+      "PF-04"
+    ],
+    "PF-07": [
+      "PF-05",
+      "PF-06"
+    ],
+    "PF-08": [
+      "PF-07"
+    ],
+    "PF-09": [
+      "PF-08"
+    ],
+    "PF-10": [
+      "PF-09"
+    ]
+  },
+  "acyclicDependencies": true,
+  "screenCount": 12,
+  "screenSizes": {
+    "about-desktop.png": [
+      1440,
+      1208
+    ],
+    "about-mobile.png": [
+      390,
+      1317
+    ],
+    "article-desktop.png": [
+      1440,
+      1304
+    ],
+    "article-mobile.png": [
+      390,
+      1501
+    ],
+    "index-desktop.png": [
+      1440,
+      1285
+    ],
+    "index-mobile.png": [
+      390,
+      1476
+    ],
+    "project-desktop.png": [
+      1440,
+      1321
+    ],
+    "project-mobile.png": [
+      390,
+      1653
+    ],
+    "projects-desktop.png": [
+      1440,
+      1037
+    ],
+    "projects-mobile.png": [
+      390,
+      1218
+    ],
+    "writing-desktop.png": [
+      1440,
+      1019
+    ],
+    "writing-mobile.png": [
+      390,
+      1144
+    ]
+  },
+  "previewChecks": 18,
+  "previewFailures": [],
+  "model": {
+    "errors": 0,
+    "warnings": 5,
+    "total": 5
+  },
+  "modelToolVersion": "1.13.0",
+  "applicationTestsRun": false
+}

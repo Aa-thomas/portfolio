@@ -1,0 +1,5 @@
+  warn :16 open issue on "Sign in": D-03: choose owner sign-in and recovery
+  warn :25 open issue on "Save project": D-04: confirm photo policy and limits
+  warn :34 open issue on "Import Markdown": D-05: confirm metadata and body-image rules
+  warn :43 open issue on "Publish entry": D-06: confirm lifecycle and stable slug rules
+  warn :79 open issue on "Set featured projects": D-06: confirm limit order and fallback

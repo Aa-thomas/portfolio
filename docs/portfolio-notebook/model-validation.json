@@ -1,0 +1,66 @@
+{
+  "validateSchemaVersion": "1.0",
+  "generator": {
+    "name": "@milehimikey/em",
+    "version": "1.13.0"
+  },
+  "file": "publishing.em",
+  "ok": true,
+  "summary": {
+    "errors": 0,
+    "warnings": 5,
+    "total": 5
+  },
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "code": "open-issue",
+      "message": "open issue on \"Sign in\": D-03: choose owner sign-in and recovery",
+      "line": 16,
+      "refs": [
+        "open-owner-session/command.sign-in"
+      ],
+      "usageCategory": "open issue"
+    },
+    {
+      "severity": "warning",
+      "code": "open-issue",
+      "message": "open issue on \"Save project\": D-04: confirm photo policy and limits",
+      "line": 25,
+      "refs": [
+        "save-project-draft/command.save-project"
+      ],
+      "usageCategory": "open issue"
+    },
+    {
+      "severity": "warning",
+      "code": "open-issue",
+      "message": "open issue on \"Import Markdown\": D-05: confirm metadata and body-image rules",
+      "line": 34,
+      "refs": [
+        "import-article-draft/command.import-markdown"
+      ],
+      "usageCategory": "open issue"
+    },
+    {
+      "severity": "warning",
+      "code": "open-issue",
+      "message": "open issue on \"Publish entry\": D-06: confirm lifecycle and stable slug rules",
+      "line": 43,
+      "refs": [
+        "publish-entry/command.publish-entry"
+      ],
+      "usageCategory": "open issue"
+    },
+    {
+      "severity": "warning",
+      "code": "open-issue",
+      "message": "open issue on \"Set featured projects\": D-06: confirm limit order and fallback",
+      "line": 79,
+      "refs": [
+        "choose-featured-projects/command.set-featured-projects"
+      ],
+      "usageCategory": "open issue"
+    }
+  ]
+}

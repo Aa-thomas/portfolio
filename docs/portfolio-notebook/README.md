@@ -3,6 +3,7 @@
 Specification P2 · 30 September 2026 · Planning material for [Aa-thomas/portfolio](https://github.com/Aa-thomas/portfolio).
 
 - [Specification](spec.md): agreed features, proposed policies, and open decisions.
+- [Published issues and dependencies](tracking.md): [parent #7](https://github.com/Aa-thomas/portfolio/issues/7) with ten proposed child issues.
 - [Ticket breakdown](tickets.md): ten vertical implementation slices and their dependencies.
 - [Wireframes](wireframes.md): six existing public screens on desktop and mobile; missing publishing screens are PF-01.
 - [Contact sheet](wireframes/contact-sheet.png) and [screen gallery](wireframes/contact-sheet.html).

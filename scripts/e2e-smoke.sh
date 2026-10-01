@@ -67,7 +67,8 @@ check_contains "$LIB" 'library' 'SC-01 signed-in library renders'
 
 # --- project flow (SC-03..SC-06) ----------------------------------------
 CREATE_LOC=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio?/createProject" -H "$ORIGIN" -H "Accept: text/html" --data "x=1")
-PID=$(basename "$CREATE_LOC")
+# Netlify appends the action name to the Location; strip it before taking the id.
+PID=$(basename "${CREATE_LOC%%\?*}")
 say "     project entry: $PID"
 
 node -e "const s=require('sharp');s({create:{width:900,height:500,channels:3,background:'#3a6b5f'}}).jpeg().toFile('$FIXTURES/photo.jpg')"
@@ -80,12 +81,12 @@ check_contains "$SAVE" 'Saved as draft version 2' 'SC-03 photo draft saved'
 check_contains "$SAVE" 'img_' 'SC-03 photo attached'
 
 CREATE2=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio?/createProject" -H "$ORIGIN" -H "Accept: text/html" --data "x=1")
-PID2=$(basename "$CREATE2")
+PID2=$(basename "${CREATE2%%\?*}")
 PUB2=$(curl -s -b "$JAR" -X POST "$BASE/studio/projects/$PID2/preview?/publish" -H "$ORIGIN" -H "Accept: text/html" -F "expectedVersion=1")
 check_contains "$PUB2" 'required' 'SC-04 incomplete publish rejected'
 
 PUBLOC=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio/projects/$PID/preview?/publish" -H "$ORIGIN" -H "Accept: text/html" -F "expectedVersion=2")
-check "$PUBLOC" "$BASE/projects/notebook-e2e-project" 'SC-06 publish redirects to public page'
+check "${PUBLOC%%\?*}" "$BASE/projects/notebook-e2e-project" 'SC-06 publish redirects to public page'
 PROJ=$(curl -s "$BASE/projects/notebook-e2e-project")
 check_contains "$PROJ" 'Notebook E2E Project' 'SC-06 public detail shows title'
 check_contains "$PROJ" 'Visit the website' 'SC-06 website link present'
@@ -117,7 +118,7 @@ The first paragraph talks about **Markdown** as data.
 ![remote](https://example.com/nope.png)
 MD
 ALOC=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio?/createArticle" -H "$ORIGIN" -H "Accept: text/html" --data "x=1")
-AID=$(basename "$ALOC")
+AID=$(basename "${ALOC%%\?*}")
 IMP=$(curl -s -b "$JAR" -X POST "$BASE/studio/articles/$AID?/import" -H "$ORIGIN" -H "Accept: text/html" -F "file=@$FIXTURES/article.md;type=text/markdown")
 check_contains "$IMP" 'first heading became the title' 'SC-07 H1 title used'
 PUBA=$(curl -s -b "$JAR" -X POST "$BASE/studio/articles/$AID/preview?/publish" -H "$ORIGIN" -H "Accept: text/html" -F "expectedVersion=2")
@@ -133,7 +134,7 @@ PY
 curl -s -b "$JAR" -o /dev/null -X POST "$BASE/studio/articles/$AID?/save" -H "$ORIGIN" -H "Accept: text/html" \
   --data "expectedVersion=2&requestId=e2e-req-1&title=How%20the%20Notebook%20Keeps%20Notes&slug=&excerpt=A%20short%20account%20of%20the%20reading%20pipeline.&source=$SRC_FIELD"
 APUB=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio/articles/$AID/preview?/publish" -H "$ORIGIN" -H "Accept: text/html" -F "expectedVersion=3")
-check "$APUB" "$BASE/writing/how-the-notebook-keeps-notes" 'SC-12 article published at slug'
+check "${APUB%%\?*}" "$BASE/writing/how-the-notebook-keeps-notes" 'SC-12 article published at slug'
 ART=$(curl -s "$BASE/writing/how-the-notebook-keeps-notes")
 check_contains "$ART" 'How the Notebook Keeps Notes' 'SC-12 public article title'
 if grep -q 'alert(1)' <<<"$ART"; then bad 'SC-10 script payload leaked into article'; else ok 'SC-10 script payload not in public article'; fi

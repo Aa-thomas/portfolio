@@ -1,4 +1,4 @@
-import { DatabaseSync } from 'node:sqlite';
+import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -17,6 +17,16 @@ import { REMOTE_STORAGE, getBytes, putBytes, dbKey } from './storage';
  *   (last-write-wins is the documented fallback if two owner tabs hit two
  *   different instances at the same instant).
  */
+
+// Load Node's built-in SQLite through createRequire: some serverless bundlers
+// rewrite newer `node:` builtins into plain package imports (their known-
+// builtin list lags behind), which breaks at runtime. createRequire keeps the
+// specifier opaque to the bundler.
+const { DatabaseSync } = createRequire(import.meta.url)(
+	'node:sqlite'
+) as typeof import('node:sqlite');
+
+type SqliteDatabase = import('node:sqlite').DatabaseSync;
 
 export const DATA_DIR = resolve(process.env.PORTFOLIO_DATA ?? 'data');
 export const MEDIA_DIR = join(DATA_DIR, 'media');
@@ -99,10 +109,10 @@ CREATE TABLE IF NOT EXISTS ops (
 );
 `;
 
-export let db: DatabaseSync;
+export let db: SqliteDatabase;
 export let dbFile: string;
 
-function openDb(file: string): DatabaseSync {
+function openDb(file: string): SqliteDatabase {
 	const handle = new DatabaseSync(file);
 	handle.exec('PRAGMA journal_mode=WAL;');
 	handle.exec('PRAGMA foreign_keys=ON;');
@@ -115,23 +125,25 @@ function openDb(file: string): DatabaseSync {
  * Statement `run` and `exec` calls are intercepted; schema application above
  * uses the raw handle so cold starts do not count as changes.
  */
-function instrument(handle: DatabaseSync): DatabaseSync {
+function instrument(handle: SqliteDatabase): SqliteDatabase {
 	return new Proxy(handle, {
-		get(target, prop, receiver) {
+		get(target, prop) {
 			const value = Reflect.get(target, prop, target);
+			if (typeof value !== 'function') return value;
 			if (prop === 'exec') {
-				return (...args: Parameters<DatabaseSync['exec']>) => {
+				return (...args: Parameters<SqliteDatabase['exec']>) => {
 					const out = value.apply(target, args);
 					dirty = true;
 					return out;
 				};
 			}
 			if (prop === 'prepare') {
-				return (...args: Parameters<DatabaseSync['prepare']>) => {
+				return (...args: Parameters<SqliteDatabase['prepare']>) => {
 					const statement = value.apply(target, args);
 					return new Proxy(statement, {
-						get(stmt, stmtProp, stmtReceiver) {
+						get(stmt, stmtProp) {
 							const stmtValue = Reflect.get(stmt, stmtProp, stmt);
+							if (typeof stmtValue !== 'function') return stmtValue;
 							if (stmtProp === 'run') {
 								return (...runArgs: Parameters<typeof stmt.run>) => {
 									const out = stmtValue.apply(stmt, runArgs);
@@ -139,14 +151,16 @@ function instrument(handle: DatabaseSync): DatabaseSync {
 									return out;
 								};
 							}
-							return stmtValue;
+							// Native methods reject a Proxy receiver ("Illegal
+							// invocation"), so hand back a bound function.
+							return stmtValue.bind(stmt);
 						}
 					}) as never;
 				};
 			}
-			return value;
+			return value.bind(target);
 		}
-	}) as DatabaseSync;
+	}) as SqliteDatabase;
 }
 
 let localGen = 0;
@@ -205,13 +219,17 @@ export function ensureDbReady(): Promise<void> {
 	return ready;
 }
 
-/** Re-pull when another instance wrote a newer generation. */
+/**
+ * Re-pull whenever the remote generation differs from ours — newer means
+ * another instance wrote; lower or missing means the store was reset or
+ * restored from a backup. Either way the remote bytes are authoritative.
+ */
 export async function ensureDbFresh(): Promise<void> {
 	if (!REMOTE_STORAGE) return;
 	await ensureDbReady();
 	const { getGeneration } = await import('./generation');
 	const remote = await getGeneration();
-	if (remote !== null && remote > localGen) {
+	if ((remote ?? 0) !== localGen) {
 		ready = null;
 		await ensureDbReady();
 	}

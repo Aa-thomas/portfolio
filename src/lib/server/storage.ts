@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { getStore, type GetStoreOptions } from '@netlify/blobs';
 import { DATA_DIR } from './db';
 
 /**
@@ -15,16 +16,23 @@ export const REMOTE_STORAGE = process.env.PORTFOLIO_STORAGE === 'blobs';
 
 const DB_KEY = 'db/sqlite';
 
-let storePromise: Promise<Awaited<ReturnType<typeof loadStore>>> | null = null;
-
-async function loadStore() {
-	const { getStore } = await import('@netlify/blobs');
-	return getStore('notebook', { consistency: 'strong' });
-}
-
-function store() {
-	storePromise ??= loadStore();
-	return storePromise;
+/**
+ * The site's durable blob store (strong consistency; small personal site).
+ * On Netlify the runtime injects a Blobs context for functions it detects
+ * use the SDK. CLI-built deploys inline the SDK and defeat that detection,
+ * so BLOBS_SITE_ID/BLOBS_TOKEN (set in the site environment) take over and
+ * configure the store explicitly — the documented path for external use.
+ */
+export function store() {
+	const siteID = process.env.BLOBS_SITE_ID;
+	const token = process.env.BLOBS_TOKEN;
+	const options: Omit<GetStoreOptions, 'name'> = { consistency: 'strong' };
+	if (siteID && token) {
+		options.siteID = siteID;
+		options.token = token;
+		options.apiURL = process.env.BLOBS_URL ?? 'https://api.netlify.com';
+	}
+	return getStore('notebook', options);
 }
 
 export async function putBytes(key: string, bytes: Buffer, metadata?: Record<string, string>) {

@@ -1,4 +1,4 @@
-import { REMOTE_STORAGE } from './storage';
+import { REMOTE_STORAGE, store } from './storage';
 
 /**
  * Remote generation of the blob-stored database. The generation number lives
@@ -8,8 +8,6 @@ import { REMOTE_STORAGE } from './storage';
  */
 export async function getGeneration(): Promise<number | null> {
 	if (!REMOTE_STORAGE) return null;
-	const { getStore } = await import('@netlify/blobs');
-	const store = getStore('notebook', { consistency: 'strong' });
-	const value = await store.get('db/gen');
+	const value = await store().get('db/gen');
 	return value ? Number(value) : null;
 }

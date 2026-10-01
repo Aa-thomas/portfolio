@@ -7,3 +7,6 @@ data/
 .env.*
 !.env.example
 vite.config.ts.timestamp-*
+
+# Local Netlify folder
+.netlify

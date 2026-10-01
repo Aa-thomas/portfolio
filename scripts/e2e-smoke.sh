@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
-# End-to-end smoke test against the production build (server boundary).
-# Covers the PF-03..PF-09 scenario checks that a signed-out visitor and a
-# direct HTTP client can observe. Run from the repo root after `npm run build`.
+# End-to-end smoke test. Two modes:
+#   local (default): boots `node build` on a throwaway data directory,
+#                    provisions an owner, and includes a restart-durability pass.
+#   remote:          REMOTE_BASE=https://<site> OWNER_USER=<u> OWNER_PASS=<p>
+#                    runs the same checks against a deployed site (skips the
+#                    restart section; durability is proven by redeploying).
 set -u
-PORT=4317
-BASE="http://127.0.0.1:$PORT"
-ORIGIN="Origin: http://127.0.0.1:$PORT"
-DATA="$(mktemp -d /tmp/notebook-e2e.XXXXXX)"
-JAR="$DATA/cookies.txt"
+REMOTE_BASE="${REMOTE_BASE:-}"
+SKIP_SERVER=
+OWNER_USER="${OWNER_USER:-aaron}"
+PASSWD="${OWNER_PASS:-a-very-long-e2e-password}"
+JAR="$(mktemp)"
 PASS=0; FAIL=0
 
 say()  { printf '%s\n' "$*"; }
@@ -16,19 +19,27 @@ bad()  { FAIL=$((FAIL+1)); say "FAIL - $1"; }
 check(){ if [ "$1" = "$2" ]; then ok "$3 ($1)"; else bad "$3 (want $2, got $1)"; fi }
 
 check_contains(){ if grep -q "$2" <<<"$1"; then ok "$3"; else bad "$3 (missing: $2)"; fi; }
-# Form actions answer HTTP 200 with a JSON body; the browser-side enhance
-# layer follows {"type":"redirect","location":...}. Extract that location.
-action_location(){ python3 -c "import sys,json
-try: print(json.load(sys.stdin).get('location',''))
-except Exception: pass"; }
 
-# --- boot ---------------------------------------------------------------
-PORT=$PORT ORIGIN="$BASE" PORTFOLIO_DATA="$DATA" node build >/dev/null 2>&1 &
-SERVER=$!
-for i in $(seq 1 50); do curl -sf -o /dev/null "$BASE/" && break; sleep 0.2; done
+if [ -n "$REMOTE_BASE" ]; then
+  BASE="${REMOTE_BASE%/}"
+  SKIP_SERVER=1
+  say "== remote mode: $BASE"
+else
+  PORT=4317
+  BASE="http://127.0.0.1:$PORT"
+  DATA="$(mktemp -d /tmp/notebook-e2e.XXXXXX)"
+  say "== local mode (data: $DATA)"
+fi
+ORIGIN="Origin: $BASE"
 
-OWNER_PASSWORD='a-very-long-e2e-password' PORTFOLIO_DATA="$DATA" \
-  node scripts/provision-owner.mjs aaron 'a-very-long-e2e-password' >/dev/null
+if [ -z "$SKIP_SERVER" ]; then
+  PORT=$PORT ORIGIN="$BASE" PORTFOLIO_DATA="$DATA" node build >/dev/null 2>&1 &
+  SERVER=$!
+  for i in $(seq 1 50); do curl -sf -o /dev/null "$BASE/" && break; sleep 0.2; done
+  OWNER_PASSWORD="$PASSWD" PORTFOLIO_DATA="$DATA" \
+    node scripts/provision-owner.mjs "$OWNER_USER" "$PASSWD" >/dev/null
+fi
+FIXTURES="$(mktemp -d)"
 
 # --- public reads before content ---------------------------------------
 HOME_HTML=$(curl -s "$BASE/")
@@ -40,21 +51,17 @@ check "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/writing/ghost")" 404 'SC-
 check "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/studio")" 303 'SC-02 /studio redirects signed out'
 LOGIN_PAGE=$(curl -s "$BASE/studio/login")
 check_contains "$LOGIN_PAGE" 'Private notebook-keeping' 'PF-03 login page renders'
-# direct mutation without cookie:
 CREATE=$(curl -s -o /dev/null -w '%{http_code};%{redirect_url}' -X POST "$BASE/studio?/createProject" -H "$ORIGIN" -H "Accept: text/html" --data "x=1")
 case "$CREATE" in *"/studio/projects/"*) bad 'SC-02 anonymous create must not reach an editor';; *) ok 'SC-02 anonymous create rejected';; esac
 check "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/media/img_missing/card")" 404 'SC-02 unknown media 404'
+
+# --- bad login, then sign in --------------------------------------------
+curl -s -c "$JAR" -o /dev/null -X POST "$BASE/studio/login" -H "$ORIGIN" -H "Accept: text/html" --data "username=$OWNER_USER&password=wrong-wrong-wrong"
+check "$(curl -s -b "$JAR" -o /dev/null -w '%{http_code}' "$BASE/studio")" 303 'SC-01 wrong password does not sign in'
 # cross-origin POST with a foreign Origin is rejected even with the cookie
-curl -s -c "$JAR" -o /dev/null -X POST "$BASE/studio/login" -H "$ORIGIN" -H "Accept: text/html" --data 'username=aaron&password=a-very-long-e2e-password'
 CSRF=$(curl -s -b "$JAR" -o /dev/null -w '%{http_code}' -X POST "$BASE/studio?/createProject" -H "Origin: https://evil.example" -H "Accept: text/html" --data "x=1")
 check "$CSRF" 403 'SC-02 cross-origin mutation with cookie rejected'
-
-# --- bad login ----------------------------------------------------------
-curl -s -c "$JAR" -o /dev/null -X POST "$BASE/studio/login" -H "$ORIGIN" -H "Accept: text/html" --data 'username=aaron&password=wrong-wrong-wrong'
-check "$(curl -s -b "$JAR" -o /dev/null -w '%{http_code}' "$BASE/studio")" 303 'SC-01 wrong password does not sign in'
-
-# --- sign in -------------------------------------------------------------
-curl -s -c "$JAR" -o /dev/null -X POST "$BASE/studio/login" -H "$ORIGIN" -H "Accept: text/html" --data 'username=aaron&password=a-very-long-e2e-password'
+curl -s -c "$JAR" -o /dev/null -X POST "$BASE/studio/login" -H "$ORIGIN" -H "Accept: text/html" --data "username=$OWNER_USER&password=$PASSWD"
 LIB=$(curl -s -b "$JAR" "$BASE/studio")
 check_contains "$LIB" 'library' 'SC-01 signed-in library renders'
 
@@ -63,22 +70,20 @@ CREATE_LOC=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/
 PID=$(basename "$CREATE_LOC")
 say "     project entry: $PID"
 
-node -e "const s=require('sharp');s({create:{width:900,height:500,channels:3,background:'#3a6b5f'}}).jpeg().toFile('$DATA/photo.jpg')"
+node -e "const s=require('sharp');s({create:{width:900,height:500,channels:3,background:'#3a6b5f'}}).jpeg().toFile('$FIXTURES/photo.jpg')"
 SAVE=$(curl -s -b "$JAR" -X POST "$BASE/studio/projects/$PID?/save" -H "$ORIGIN" -H "Accept: text/html" \
   -F "expectedVersion=1" -F "title=Notebook E2E Project" \
   -F "url=https://example.com/e2e" -F "description=End-to-end checked project." \
   -F "alt=A plain teal rectangle" -F "caseStudy=" -F "crop=" \
-  -F "photo=@$DATA/photo.jpg;type=image/jpeg")
+  -F "photo=@$FIXTURES/photo.jpg;type=image/jpeg")
 check_contains "$SAVE" 'Saved as draft version 2' 'SC-03 photo draft saved'
 check_contains "$SAVE" 'img_' 'SC-03 photo attached'
 
-# incomplete draft cannot publish (SC-04): fresh entry with no fields
 CREATE2=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio?/createProject" -H "$ORIGIN" -H "Accept: text/html" --data "x=1")
 PID2=$(basename "$CREATE2")
 PUB2=$(curl -s -b "$JAR" -X POST "$BASE/studio/projects/$PID2/preview?/publish" -H "$ORIGIN" -H "Accept: text/html" -F "expectedVersion=1")
 check_contains "$PUB2" 'required' 'SC-04 incomplete publish rejected'
 
-# publish the real one from its preview (SC-06)
 PUBLOC=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio/projects/$PID/preview?/publish" -H "$ORIGIN" -H "Accept: text/html" -F "expectedVersion=2")
 check "$PUBLOC" "$BASE/projects/notebook-e2e-project" 'SC-06 publish redirects to public page'
 PROJ=$(curl -s "$BASE/projects/notebook-e2e-project")
@@ -87,13 +92,12 @@ check_contains "$PROJ" 'Visit the website' 'SC-06 website link present'
 HOME2=$(curl -s "$BASE/")
 check_contains "$HOME2" 'Notebook E2E Project' 'SC-20/SC-06 home fallback shows newest project'
 
-# public media now resolves; the private source variant must not (SC-02/SC-15)
 IMG_ID=$(grep -o 'img_[a-z0-9]*' <<<"$SAVE" | head -1)
 check "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/media/$IMG_ID/card")" 200 'published card is public'
 check "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/media/$IMG_ID/source")" 404 'source stays private'
 
 # --- article flow (SC-07..SC-12) -----------------------------------------
-cat > "$DATA/article.md" <<'MD'
+cat > "$FIXTURES/article.md" <<'MD'
 ---
 excerpt: A short account of the reading pipeline.
 ---
@@ -114,14 +118,12 @@ The first paragraph talks about **Markdown** as data.
 MD
 ALOC=$(curl -s -b "$JAR" -o /dev/null -w '%{redirect_url}' -X POST "$BASE/studio?/createArticle" -H "$ORIGIN" -H "Accept: text/html" --data "x=1")
 AID=$(basename "$ALOC")
-IMP=$(curl -s -b "$JAR" -X POST "$BASE/studio/articles/$AID?/import" -H "$ORIGIN" -H "Accept: text/html" -F "file=@$DATA/article.md;type=text/markdown")
+IMP=$(curl -s -b "$JAR" -X POST "$BASE/studio/articles/$AID?/import" -H "$ORIGIN" -H "Accept: text/html" -F "file=@$FIXTURES/article.md;type=text/markdown")
 check_contains "$IMP" 'first heading became the title' 'SC-07 H1 title used'
 PUBA=$(curl -s -b "$JAR" -X POST "$BASE/studio/articles/$AID/preview?/publish" -H "$ORIGIN" -H "Accept: text/html" -F "expectedVersion=2")
 check_contains "$PUBA" 'Unresolved image' 'SC-11 unresolved image blocks publish'
 
-# remove the remote image, save, publish
-SRC_CLEAN=$(sed 's#!\[remote\](https://example.com/nope.png)#Removed.#' "$DATA/article.md")
-SRC_FIELD=$(python3 - "$DATA/article.md" <<'PY'
+SRC_FIELD=$(python3 - "$FIXTURES/article.md" <<'PY'
 import sys, urllib.parse, re
 text = open(sys.argv[1]).read()
 text = re.sub(r'!\[remote\]\(https://example\.com/nope\.png\)', 'Removed.', text)
@@ -162,22 +164,25 @@ check_contains "$WV" 'Withdrawn' 'SC-15 withdraw succeeds'
 check "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/projects/notebook-e2e-project")" 404 'SC-15 withdrawn page 404'
 check "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/media/$IMG_ID/card")" 404 'SC-15 withdrawn media not served anonymously'
 
-# --- restart durability (SC-23, local evidence for PF-10) ------------------
-kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null
-PORT=$PORT ORIGIN="$BASE" PORTFOLIO_DATA="$DATA" node build >/dev/null 2>&1 &
-SERVER=$!
-for i in $(seq 1 50); do curl -sf -o /dev/null "$BASE/" && break; sleep 0.2; done
-ART2=$(curl -s "$BASE/writing/how-the-notebook-keeps-notes")
-check_contains "$ART2" 'How the Notebook Keeps Notes' 'SC-23 article survives restart'
-LIB2=$(curl -s -b "$JAR" "$BASE/studio")
-check_contains "$LIB2" 'Notebook E2E Project' 'SC-23 session and drafts survive restart'
+# --- durability ------------------------------------------------------------
+if [ -z "$SKIP_SERVER" ]; then
+  kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null
+  PORT=$PORT ORIGIN="$BASE" PORTFOLIO_DATA="$DATA" node build >/dev/null 2>&1 &
+  SERVER=$!
+  for i in $(seq 1 50); do curl -sf -o /dev/null "$BASE/" && break; sleep 0.2; done
+  ART2=$(curl -s "$BASE/writing/how-the-notebook-keeps-notes")
+  check_contains "$ART2" 'How the Notebook Keeps Notes' 'SC-23 article survives restart'
+  LIB2=$(curl -s -b "$JAR" "$BASE/studio")
+  check_contains "$LIB2" 'Notebook E2E Project' 'SC-23 session and drafts survive restart'
+else
+  say "skip - restart durability (remote mode: proven by redeploying instead)"
+fi
 
 # --- sign out (SC-01) ------------------------------------------------------
 curl -s -b "$JAR" -c "$JAR" -o /dev/null -X POST "$BASE/studio?/logout" -H "$ORIGIN" -H "Accept: text/html" --data "x=1"
 check "$(curl -s -b "$JAR" -o /dev/null -w '%{http_code}' "$BASE/studio")" 303 'SC-01 signed-out session cannot read studio'
 
-kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null
+if [ -z "$SKIP_SERVER" ]; then kill $SERVER 2>/dev/null; wait $SERVER 2>/dev/null; fi
 say ""
-say "data dir kept for inspection: $DATA"
 say "passed: $PASS  failed: $FAIL"
 [ "$FAIL" -eq 0 ]

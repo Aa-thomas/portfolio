@@ -1,21 +1,27 @@
 import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { randomBytes, scryptSync } from 'node:crypto';
+import { REMOTE_STORAGE, getBytes, putBytes, dbKey } from './storage';
 
 /**
- * Durable content store. Uses Node's built-in SQLite so no native add-on is
- * required; the data directory (database + uploaded media) is meant to live on
- * persistent host storage (D-03) and survives restarts (SC-23).
+ * Durable content store. One SQLite database; two homes:
+ *
+ * - Local (development/tests): data/notebook.sqlite on disk, as always.
+ * - Netlify (PORTFOLIO_STORAGE=blobs): functions have no persistent disk, so
+ *   the database file lives in Netlify Blobs, stamped with a generation
+ *   number. Each request checks the generation and re-pulls when someone else
+ *   wrote; requests that mutated the database write it back after responding.
+ *   A single owner edits this notebook, so writes never race in practice
+ *   (last-write-wins is the documented fallback if two owner tabs hit two
+ *   different instances at the same instant).
  */
+
 export const DATA_DIR = resolve(process.env.PORTFOLIO_DATA ?? 'data');
-export const MEDIA_DIR = resolve(DATA_DIR, 'media');
+export const MEDIA_DIR = join(DATA_DIR, 'media');
 
-mkdirSync(MEDIA_DIR, { recursive: true });
-
-export const db = new DatabaseSync(resolve(DATA_DIR, 'notebook.sqlite'));
-db.exec('PRAGMA journal_mode=WAL;');
-db.exec('PRAGMA foreign_keys=ON;');
-db.exec(`
+const SCHEMA = `
 CREATE TABLE IF NOT EXISTS owners (
   id TEXT PRIMARY KEY,
   username TEXT NOT NULL UNIQUE,
@@ -91,7 +97,146 @@ CREATE TABLE IF NOT EXISTS ops (
   result_json TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
-`);
+`;
+
+export let db: DatabaseSync;
+export let dbFile: string;
+
+function openDb(file: string): DatabaseSync {
+	const handle = new DatabaseSync(file);
+	handle.exec('PRAGMA journal_mode=WAL;');
+	handle.exec('PRAGMA foreign_keys=ON;');
+	handle.exec(SCHEMA);
+	return handle;
+}
+
+/**
+ * Track mutations so the request hook can write the database back to blobs.
+ * Statement `run` and `exec` calls are intercepted; schema application above
+ * uses the raw handle so cold starts do not count as changes.
+ */
+function instrument(handle: DatabaseSync): DatabaseSync {
+	return new Proxy(handle, {
+		get(target, prop, receiver) {
+			const value = Reflect.get(target, prop, target);
+			if (prop === 'exec') {
+				return (...args: Parameters<DatabaseSync['exec']>) => {
+					const out = value.apply(target, args);
+					dirty = true;
+					return out;
+				};
+			}
+			if (prop === 'prepare') {
+				return (...args: Parameters<DatabaseSync['prepare']>) => {
+					const statement = value.apply(target, args);
+					return new Proxy(statement, {
+						get(stmt, stmtProp, stmtReceiver) {
+							const stmtValue = Reflect.get(stmt, stmtProp, stmt);
+							if (stmtProp === 'run') {
+								return (...runArgs: Parameters<typeof stmt.run>) => {
+									const out = stmtValue.apply(stmt, runArgs);
+									dirty = true;
+									return out;
+								};
+							}
+							return stmtValue;
+						}
+					}) as never;
+				};
+			}
+			return value;
+		}
+	}) as DatabaseSync;
+}
+
+let localGen = 0;
+let dirty = false;
+let ready: Promise<void> | null = null;
+
+async function pullFromBlobs(): Promise<void> {
+	const bytes = await getBytes(dbKey);
+	if (bytes) {
+		writeFileSync(dbFile, bytes);
+		db = instrument(openDb(dbFile));
+	} else {
+		// First boot ever: empty database, generation 0.
+		db = instrument(openDb(dbFile));
+	}
+	// The standalone generation blob is authoritative for the bytes just read.
+	const { getGeneration } = await import('./generation');
+	const remote = await getGeneration();
+	localGen = remote ?? 0;
+	await bootstrapOwner();
+}
+
+/** Optional first-run owner provisioning on the host (D-03 recovery). */
+async function bootstrapOwner(): Promise<void> {
+	const username = process.env.OWNER_BOOTSTRAP_USERNAME;
+	const password = process.env.OWNER_BOOTSTRAP_PASSWORD;
+	if (!username || !password) return;
+	const row = db.prepare('SELECT COUNT(*) AS n FROM owners').get() as { n: number };
+	if (row.n === 0 || process.env.OWNER_BOOTSTRAP_FORCE === '1') {
+		const salt = randomBytes(16);
+		const hash = scryptSync(password, salt, 64);
+		db.prepare('DELETE FROM owners WHERE username = ?').run(username);
+		db.prepare(
+			'INSERT INTO owners (id, username, password_hash, created_at) VALUES (?, ?, ?, ?)'
+		).run(
+			`own_${randomBytes(8).toString('hex')}`,
+			username,
+			`scrypt$${salt.toString('hex')}$${hash.toString('hex')}`,
+			new Date().toISOString()
+		);
+	}
+}
+
+if (!REMOTE_STORAGE) {
+	mkdirSync(MEDIA_DIR, { recursive: true });
+	dbFile = join(DATA_DIR, 'notebook.sqlite');
+	db = openDb(dbFile);
+} else {
+	dbFile = join(tmpdir(), 'notebook.sqlite');
+}
+
+/** No-op locally; on Netlify, open (and first-pull) the database. */
+export function ensureDbReady(): Promise<void> {
+	if (!REMOTE_STORAGE) return Promise.resolve();
+	ready ??= pullFromBlobs();
+	return ready;
+}
+
+/** Re-pull when another instance wrote a newer generation. */
+export async function ensureDbFresh(): Promise<void> {
+	if (!REMOTE_STORAGE) return;
+	await ensureDbReady();
+	const { getGeneration } = await import('./generation');
+	const remote = await getGeneration();
+	if (remote !== null && remote > localGen) {
+		ready = null;
+		await ensureDbReady();
+	}
+}
+
+/** Write the database back after a mutating request. */
+export async function flushDb(): Promise<void> {
+	if (!REMOTE_STORAGE || !dirty) return;
+	const raw = new DatabaseSync(dbFile);
+	raw.exec('PRAGMA wal_checkpoint(TRUNCATE);');
+	raw.close();
+	const bytes = readFileSync(dbFile);
+	localGen += 1;
+	// The generation is recorded inside the database too, so a restored
+	// backup file always carries its own generation.
+	const handle = new DatabaseSync(dbFile);
+	handle.exec('PRAGMA journal_mode=WAL;');
+	handle.prepare(
+		"INSERT INTO kv (key, value) VALUES ('db_generation', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value"
+	).run(String(localGen));
+	handle.close();
+	await putBytes(dbKey, readFileSync(dbFile), { gen: String(localGen) });
+	await putBytes('db/gen', Buffer.from(String(localGen), 'utf8'));
+	dirty = false;
+}
 
 export function now(): string {
 	return new Date().toISOString();
@@ -157,8 +302,6 @@ export function getEntry(id: string): EntryRow | undefined {
 
 export function getEntryByPublicSlug(kind: string, slug: string): EntryRow | undefined {
 	return db
-		.prepare(
-			"SELECT * FROM entries WHERE kind = ? AND p_slug = ? AND pub_version IS NOT NULL"
-		)
+		.prepare("SELECT * FROM entries WHERE kind = ? AND p_slug = ? AND pub_version IS NOT NULL")
 		.get(kind, slug) as EntryRow | undefined;
 }

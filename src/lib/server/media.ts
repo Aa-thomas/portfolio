@@ -1,7 +1,6 @@
 import sharp from 'sharp';
-import { mkdirSync, writeFileSync, readFileSync, unlinkSync } from 'node:fs';
-import { join, resolve } from 'node:path';
-import { db, MEDIA_DIR, newId, now } from './db';
+import { db, newId, now } from './db';
+import { getBytes, putBytes } from './storage';
 
 /**
  * Private media boundary (D-04 proposal). A photo is an owner-uploaded file
@@ -9,7 +8,8 @@ import { db, MEDIA_DIR, newId, now } from './db';
  * filename), auto-oriented, and reduced to 3:2 thumbnails with metadata
  * stripped. The original bytes are preserved privately. The source is never
  * enlarged, and derivatives always come from the stored crop so preview and
- * published output agree (SC-03).
+ * published output agree (SC-03). Bytes live in the durable store (filesystem
+ * locally, Netlify Blobs in production).
  */
 
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024; // 10 MiB
@@ -116,8 +116,12 @@ async function inspectUpload(bytes: Buffer) {
 	};
 }
 
-async function renderCard(photoId: string, sourcePath: string, crop: CropRect): Promise<void> {
-	const meta = await sharp(sourcePath).metadata();
+async function renderCard(
+	photoId: string,
+	source: Buffer,
+	crop: CropRect
+): Promise<void> {
+	const meta = await sharp(source).metadata();
 	const rotated = (meta.orientation ?? 1) >= 5;
 	const ow = rotated ? (meta.height ?? 1) : (meta.width ?? 1);
 	const oh = rotated ? (meta.width ?? 1) : (meta.height ?? 1);
@@ -125,20 +129,16 @@ async function renderCard(photoId: string, sourcePath: string, crop: CropRect): 
 	const top = Math.round(crop.y * oh);
 	const width = Math.max(16, Math.round(crop.w * ow));
 	const height = Math.max(16, Math.round(crop.h * oh));
-	const dir = join(MEDIA_DIR, photoId);
 	const extract = { left, top, width, height };
-	await sharp(sourcePath)
-		.rotate()
-		.extract(extract)
-		.resize({ width: 800, withoutEnlargement: true })
-		.jpeg({ quality: 82 })
-		.toFile(join(dir, 'card.jpg'));
-	await sharp(sourcePath)
-		.rotate()
-		.extract(extract)
+	const base = sharp(source).rotate().extract(extract);
+	const card = await base.clone().resize({ width: 800, withoutEnlargement: true }).jpeg({ quality: 82 }).toBuffer();
+	const card2x = await base
+		.clone()
 		.resize({ width: 1600, withoutEnlargement: true })
 		.jpeg({ quality: 80 })
-		.toFile(join(dir, 'card2x.jpg'));
+		.toBuffer();
+	await putBytes(`media/${photoId}/card.jpg`, card);
+	await putBytes(`media/${photoId}/card2x.jpg`, card2x);
 }
 
 export async function storePhoto(
@@ -149,22 +149,21 @@ export async function storePhoto(
 ): Promise<StoredPhoto> {
 	const info = await inspectUpload(bytes);
 	const photoId = newId('img');
-	const dir = join(MEDIA_DIR, photoId);
-	mkdirSync(dir, { recursive: true });
-	const sourcePath = join(dir, 'source.bin');
-	writeFileSync(sourcePath, bytes);
+	const sourceKey = `media/${photoId}/source.bin`;
+	await putBytes(sourceKey, bytes);
 	const crop = normalizeCrop(cropInput, info.width, info.height);
 	if (role === 'image') {
 		// Body images keep their natural aspect; oriented, downscaled, no metadata.
-		await sharp(sourcePath)
+		const full = await sharp(bytes)
 			.rotate()
 			.resize({ width: 1600, withoutEnlargement: true })
 			.jpeg({ quality: 84 })
-			.toFile(join(dir, 'full.jpg'));
+			.toBuffer();
+		await putBytes(`media/${photoId}/full.jpg`, full);
 	} else {
 		try {
-			await renderCard(photoId, sourcePath, crop);
-		} catch (err) {
+			await renderCard(photoId, bytes, crop);
+		} catch {
 			db.prepare('DELETE FROM photos WHERE id = ?').run(photoId);
 			throw new MediaError(
 				'The image could not be processed. The previous saved photo is unchanged.',
@@ -186,8 +185,9 @@ export async function reframePhoto(photoId: string, cropInput: unknown): Promise
 		| undefined;
 	if (!row) throw new MediaError('The saved photo is missing.', 'missing');
 	const crop = normalizeCrop(cropInput, row.width, row.height);
-	const sourcePath = join(MEDIA_DIR, photoId, 'source.bin');
-	await renderCard(photoId, sourcePath, crop);
+	const source = await getBytes(`media/${photoId}/source.bin`);
+	if (!source) throw new MediaError('The saved photo is missing.', 'missing');
+	await renderCard(photoId, source, crop);
 	return crop;
 }
 
@@ -207,52 +207,39 @@ export async function replaceEntryPhoto(
 		return { photoId: null, crop: null };
 	}
 	const stored = await storePhoto(entryId, role, bytes, cropInput);
-	const prior = currentPhotoId
-		? (db.prepare('SELECT id FROM photos WHERE id = ?').get(currentPhotoId) as
-				| { id: string }
-				| undefined)
-		: undefined;
 	const crop = normalizeCrop(cropInput, stored.width, stored.height);
 	// Only after the new photo is fully stored and derived do we stop
 	// referencing the old one; a failure above left the old data intact (SC-05).
-	return { photoId: stored.id, crop: JSON.stringify(crop), ...(prior ? {} : {}) };
+	return { photoId: stored.id, crop: JSON.stringify(crop) };
 }
 
-export type MediaFile =
-	| { kind: 'card'; bytes: Buffer; mime: 'image/jpeg' }
-	| { kind: 'source'; bytes: Buffer; mime: string };
+export type MediaFile = { bytes: Buffer; mime: string };
 
-export function readMediaFile(photoId: string, variant: string): MediaFile | null {
+export async function readMediaFile(photoId: string, variant: string): Promise<MediaFile | null> {
 	const safeId = photoId.replace(/[^a-z0-9_-]/gi, '');
 	if (safeId !== photoId) return null;
 	const row = db.prepare('SELECT mime FROM photos WHERE id = ?').get(photoId) as
 		| { mime: string }
 		| undefined;
 	if (!row) return null;
-	const dir = resolve(MEDIA_DIR, safeId);
-	try {
-		if (variant === 'card') {
-			return { kind: 'card', bytes: readFileSync(join(dir, 'card.jpg')), mime: 'image/jpeg' };
-		}
-		if (variant === 'card2x') {
-			return { kind: 'card', bytes: readFileSync(join(dir, 'card2x.jpg')), mime: 'image/jpeg' };
-		}
-		if (variant === 'full') {
-			return { kind: 'card', bytes: readFileSync(join(dir, 'full.jpg')), mime: 'image/jpeg' };
-		}
-		if (variant === 'source') {
-			return { kind: 'source', bytes: readFileSync(join(dir, 'source.bin')), mime: row.mime };
-		}
-	} catch {
-		return null;
+	let variantFile: string | null = null;
+	let mime = row.mime;
+	if (variant === 'card' || variant === 'card2x') {
+		variantFile = `${variant}.jpg`;
+		mime = 'image/jpeg';
+	} else if (variant === 'full') {
+		variantFile = 'full.jpg';
+		mime = 'image/jpeg';
+	} else if (variant === 'source') {
+		variantFile = 'source.bin';
 	}
-	return null;
+	if (!variantFile) return null;
+	const bytes = await getBytes(`media/${safeId}/${variantFile}`);
+	return bytes ? { bytes, mime } : null;
 }
 
 export function photoIsPublic(photoId: string): boolean {
-	const row = db
-		.prepare('SELECT 1 FROM published_media WHERE photo_id = ? LIMIT 1')
-		.get(photoId);
+	const row = db.prepare('SELECT 1 FROM published_media WHERE photo_id = ? LIMIT 1').get(photoId);
 	return row !== undefined;
 }
 

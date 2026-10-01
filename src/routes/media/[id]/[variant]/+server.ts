@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 	if (!isPublic && !locals.owner) {
 		error(404, 'Not found.');
 	}
-	const file = readMediaFile(id, variant);
+	const file = await readMediaFile(id, variant);
 	if (!file) error(404, 'Not found.');
 	return new Response(new Uint8Array(file.bytes), {
 		headers: {

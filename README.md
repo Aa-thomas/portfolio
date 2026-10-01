@@ -41,12 +41,20 @@ the whole journey over HTTP — including signed-out rejections, CSRF, duplicate
 slugs, stale versions, idempotent retries, withdrawal, and a restart-durability
 check.
 
-## Production notes (adapter-node)
+## Production notes
 
-Set `ORIGIN` (your public origin) and `PORTFOLIO_DATA` (persistent volume) in
-the environment. Sessions are httpOnly cookies; CSRF origin checking is on.
-Back up the whole `PORTFOLIO_DATA` directory — database and media together —
-and restore it as one unit (see `docs/portfolio-notebook/implementation.md`).
+Two deployment targets share one codebase:
+
+- **Self-hosted (adapter-node):** set `ORIGIN` and `PORTFOLIO_DATA`
+  (persistent volume). Back up that whole directory as one unit.
+- **Netlify (adapter-netlify + Netlify Blobs):** the deployed site runs with
+  `PORTFOLIO_STORAGE=blobs`; the SQLite database and photo bytes live in the
+  `notebook` blob store, generation-stamped, pulled per request and flushed
+  back after mutations. Owner credentials come from `OWNER_BOOTSTRAP_*` env.
+  Back up with `scripts/blobs-backup.mjs` (binary-safe; the CLI's blobs
+  commands are text-only and corrupt the database).
+
+Sessions are httpOnly cookies; CSRF origin checking is on in both targets.
 
 ## Layout
 

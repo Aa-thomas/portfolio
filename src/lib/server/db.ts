@@ -171,9 +171,21 @@ async function pullFromBlobs(): Promise<void> {
 	const bytes = await getBytes(dbKey);
 	if (bytes) {
 		writeFileSync(dbFile, bytes);
-		db = instrument(openDb(dbFile));
 	} else {
-		// First boot ever: empty database, generation 0.
+		// No remote database: this is either a first boot or the store was
+		// cleared. Either way the authoritative state is "empty", so a stale
+		// local file must not survive.
+		writeFileSync(dbFile, Buffer.alloc(0));
+	}
+	try {
+		db = instrument(openDb(dbFile));
+	} catch (err) {
+		// A corrupt remote blob (or a partially written file) must not brick
+		// every request on this instance: fall back to a fresh database. The
+		// owner notices via missing content and restores a known-good backup;
+		// the corrupt blob is never silently re-served as good data.
+		console.error('database pull failed, starting from an empty database:', err);
+		writeFileSync(dbFile, Buffer.alloc(0));
 		db = instrument(openDb(dbFile));
 	}
 	// The standalone generation blob is authoritative for the bytes just read.

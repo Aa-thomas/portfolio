@@ -56,18 +56,51 @@ Run on this branch (Node 26.7.0, Linux):
   (SC-04…SC-20, SC-22, SC-23) suites.
 - `npm run build` — production build succeeds with adapter-node.
 - `bash scripts/e2e-smoke.sh` — **36/36 server-boundary checks passing**
-  against `node build`, covering: empty states, unknown-URL 404s, anonymous and
-  cross-origin (CSRF) rejections, wrong-password behavior, sign-in, project
-  save with real photo derivatives, incomplete-draft publish rejection,
-  publish → public detail/index/home, public vs private media (source variant
-  stays private), Markdown import with H1 title, unresolved-image publish
-  block, sanitized public article, idempotent retry, stale-version conflict,
-  featured selection, withdrawal (page + media 404 for visitors), restart
-  durability, and sign-out invalidation.
+  against `node build` (local mode), including a restart-durability pass.
 
-Not verified here: hosted cache behavior after withdrawal (PF-10), browser
+## Deployed verification (Netlify, aaronthomas-portfolio.netlify.app)
+
+The site is deployed to Netlify (Node 22 functions) with durable storage in
+Netlify Blobs: the SQLite database file and photo bytes, generation-stamped,
+pulled per request and written back after mutating requests. Owner credentials
+are provisioned via environment bootstrap.
+
+- `REMOTE_BASE=https://… OWNER_USER=… OWNER_PASS=… bash scripts/e2e-smoke.sh`
+  — **34/34 checks passing against the live deployment**, including
+  sign-in, photo save with derivatives, publish to public pages, private
+  media boundaries, withdrawal, and CSRF rejection.
+- **Redeploy durability (SC-23):** published text and media survive a full
+  production redeploy (verified twice).
+- **Backup/restore (SC-23):** `scripts/blobs-backup.mjs` (binary-safe via the
+  SDK; the CLI's blobs:get/set flags are text-only and corrupt the database)
+  backed up the store, the store was wiped, restored, and redeployed — the
+  published project, its photo, and access boundaries returned intact.
+- **Hosting caveats discovered and fixed:** the function bundler rewrites
+  `node:sqlite` into a broken import (fixed via createRequire); CLI-built
+  deploys inline the Blobs SDK and defeat automatic context injection (fixed
+  with explicit siteID/token env); native SQLite methods must be bound when
+  returned through the db-instrumenting Proxy; warm containers require
+  bidirectional generation checks (reset/restore) not just newer-wins.
+
+Not verified here: hosted CDN cache behavior after withdrawal (origin returns
+404 immediately; Netlify's edge honors origin cache-control), and browser
 screenshots at the specified widths (design follows the already-verified
-wireframe CSS), and restore-from-backup on a real host.
+wireframe CSS).
+
+## Custom domain
+
+`aaronthomas.dev` is attached to the Netlify site (moved from a 2022 legacy
+Netlify site, which remains at poetic-sprite-71c721.netlify.app). The domain
+uses Namecheap nameservers (email forwarding via eforward*.registrar-servers.com
+must be preserved), so DNS is switched with host records rather than Netlify
+DNS. Required at Namecheap:
+
+- `A` record for `@` → `75.2.60.5` (Netlify load balancer; replaces the
+  Namecheap parking A record `192.64.119.118`)
+- `CNAME` for `www` → `aaronthomas-portfolio.netlify.app` (replaces the
+  parkingpage.namecheap.com CNAME)
+
+Netlify provisions the TLS certificate once the records resolve.
 
 ## Operational notes
 
